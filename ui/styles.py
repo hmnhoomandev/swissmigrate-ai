@@ -294,72 +294,6 @@ def load_custom_css() -> None:
             font-weight: 650;
         }
 
-        .main div[data-testid="stRadio"] div[role="radiogroup"] {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 14px;
-        }
-
-        .main div[data-testid="stRadio"] div[role="radiogroup"] > label {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 78px;
-            margin: 0;
-            padding: 0 22px;
-            border-radius: 22px;
-            border: 1px solid rgba(148,163,184,.22);
-            background:
-                linear-gradient(145deg, rgba(255,255,255,.99), rgba(248,250,252,.86));
-            box-shadow: 0 12px 30px rgba(6,27,61,.055);
-            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
-            cursor: pointer;
-        }
-
-        .main div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
-            transform: translateY(-3px);
-            border-color: rgba(227,6,19,.34);
-            box-shadow: 0 18px 42px rgba(6,27,61,.11);
-            background:
-                linear-gradient(145deg, rgba(255,255,255,1), rgba(255,241,242,.82));
-        }
-
-        .main div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) {
-            border-color: rgba(227,6,19,.72);
-            background:
-                linear-gradient(145deg, rgba(255,255,255,.99), rgba(255,238,240,.96) 48%, rgba(238,244,252,.94));
-            box-shadow:
-                0 20px 50px rgba(227,6,19,.16),
-                inset 0 0 0 1px rgba(227,6,19,.18);
-        }
-
-        .main div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked):after {
-            content: "";
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            width: 8px;
-            height: 14px;
-            border-right: 2px solid var(--deep-red);
-            border-bottom: 2px solid var(--deep-red);
-            transform: translateY(-58%) rotate(42deg);
-            border-radius: 1px;
-        }
-
-        .main div[data-testid="stRadio"] div[role="radiogroup"] > label > div:first-child {
-            display: none;
-        }
-
-        .main div[data-testid="stRadio"] div[role="radiogroup"] > label p {
-            color: var(--ink);
-            font-size: 1.12rem;
-            font-weight: 900;
-            line-height: 1.2;
-            white-space: normal;
-            text-align: center;
-        }
-
         .language-gate div.stButton > button {
             min-width: 196px;
             min-height: 52px;
@@ -367,6 +301,47 @@ def load_custom_css() -> None:
             border-radius: 999px;
             font-size: 1rem;
             background: linear-gradient(135deg, var(--swiss-red), #d20d19 44%, var(--deep-red));
+        }
+
+        .language-selector-card div.stButton > button {
+            width: 100%;
+            min-width: 0;
+            min-height: 86px;
+            padding: 0 18px;
+            border-radius: 24px;
+            border: 1px solid rgba(148,163,184,.22);
+            background:
+                linear-gradient(145deg, rgba(255,255,255,.99), rgba(248,250,252,.90));
+            color: var(--ink);
+            font-size: 1.13rem;
+            font-weight: 900;
+            box-shadow: 0 14px 34px rgba(6,27,61,.07);
+            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+        }
+
+        .language-selector-card div.stButton > button:hover {
+            transform: translateY(-3px);
+            border-color: rgba(227,6,19,.36);
+            color: var(--ink);
+            background:
+                linear-gradient(145deg, rgba(255,255,255,1), rgba(255,241,242,.86));
+            box-shadow: 0 20px 48px rgba(6,27,61,.12);
+        }
+
+        .language-selector-card div.stButton > button[kind="primary"] {
+            border-color: rgba(227,6,19,.72);
+            color: var(--deep-red);
+            background:
+                linear-gradient(145deg, rgba(255,255,255,1), rgba(255,236,238,.96) 50%, rgba(238,244,252,.94));
+            box-shadow:
+                0 20px 52px rgba(227,6,19,.16),
+                inset 0 0 0 1px rgba(227,6,19,.18);
+        }
+
+        .language-selector-card div.stButton > button p {
+            font-size: 1.13rem;
+            font-weight: 900;
+            line-height: 1.2;
         }
 
         @keyframes fadeUp {
@@ -611,11 +586,7 @@ def load_custom_css() -> None:
                 display: block;
                 margin-top: 4px;
             }
-            .main div[data-testid="stRadio"] div[role="radiogroup"] {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 10px;
-            }
-            .main div[data-testid="stRadio"] div[role="radiogroup"] > label {
+            .language-selector-card div.stButton > button {
                 min-height: 72px;
                 padding: 14px;
                 border-radius: 17px;

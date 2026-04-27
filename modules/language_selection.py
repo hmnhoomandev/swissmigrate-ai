@@ -33,6 +33,9 @@ def render_language_gate() -> None:
     hero_image = brand_image("hero-banner.png", "SwissMigrate AI guidance banner", "language-banner-img")
     languages = {language["english"]: language for language in LANGUAGES}
     ordered_options = [name for name in LANGUAGE_ORDER if name in languages]
+    selected_language = st.session_state.get("language_choice", "English")
+    if selected_language not in ordered_options:
+        selected_language = "English"
 
     st.markdown("<main class='language-gate'>", unsafe_allow_html=True)
     render_brand()
@@ -70,19 +73,26 @@ def render_language_gate() -> None:
         """,
         unsafe_allow_html=True,
     )
-    selected = st.radio(
-        t("choose_language"),
-        ordered_options,
-        index=ordered_options.index("English"),
-        label_visibility="collapsed",
-        format_func=lambda name: LANGUAGE_DISPLAY.get(name, name),
-    )
+    for row_start in range(0, len(ordered_options), 4):
+        cols = st.columns(4, gap="medium")
+        for col, english_name in zip(cols, ordered_options[row_start : row_start + 4]):
+            is_selected = english_name == selected_language
+            label = f"✓ {LANGUAGE_DISPLAY[english_name]}" if is_selected else LANGUAGE_DISPLAY[english_name]
+            with col:
+                if st.button(
+                    label,
+                    key=f"language-card-{languages[english_name]['code']}",
+                    type="primary" if is_selected else "secondary",
+                    use_container_width=True,
+                ):
+                    st.session_state["language_choice"] = english_name
+                    st.rerun()
     st.markdown("</section>", unsafe_allow_html=True)
 
     _, action_col, _ = st.columns([1.25, 0.7, 1.25])
     with action_col:
         if st.button(t("continue"), use_container_width=True):
-            st.session_state["language"] = languages[selected]["code"]
+            st.session_state["language"] = languages[selected_language]["code"]
             st.rerun()
 
     st.markdown("</main>", unsafe_allow_html=True)
