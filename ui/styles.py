@@ -11,6 +11,9 @@ def load_custom_css() -> None:
             --swiss-red: #dc2626;
             --deep-red: #991b1b;
             --lake: #0f766e;
+            --mint: #dff8ec;
+            --sun: #f6b84b;
+            --rose: #fff1f2;
             --ink: #172033;
             --muted: #64748b;
             --paper: #fffaf4;
@@ -79,6 +82,207 @@ def load_custom_css() -> None:
             color: var(--muted);
             font-size: .84rem;
             margin: 0;
+        }
+
+        .language-gate {
+            position: relative;
+            max-width: 1040px;
+            margin: 3.5vh auto 0;
+            padding: 0 18px 44px;
+            animation: fadeUp .55s ease both;
+        }
+
+        .language-gate .brand-row {
+            justify-content: center;
+            margin-bottom: 22px;
+        }
+
+        .language-gate .brand-caption {
+            text-align: left;
+        }
+
+        .language-hero {
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            border-radius: 32px;
+            padding: 46px 42px 42px;
+            border: 1px solid rgba(255,255,255,.74);
+            background:
+                linear-gradient(135deg, rgba(255,255,255,.94), rgba(255,241,242,.90) 42%, rgba(223,248,236,.88)),
+                radial-gradient(circle at 18% 18%, rgba(246,184,75,.18), transparent 32%);
+            box-shadow:
+                0 28px 80px rgba(15,23,42,.12),
+                inset 0 1px 0 rgba(255,255,255,.72);
+            isolation: isolate;
+        }
+
+        .language-hero:before {
+            content: "";
+            position: absolute;
+            inset: 12px;
+            border-radius: 26px;
+            border: 1px solid rgba(255,255,255,.58);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .language-hero:after {
+            content: "";
+            position: absolute;
+            width: 340px;
+            height: 340px;
+            right: -130px;
+            top: -145px;
+            border-radius: 50%;
+            background: conic-gradient(from 25deg, rgba(220,38,38,.24), rgba(246,184,75,.20), rgba(15,118,110,.18), rgba(220,38,38,.24));
+            filter: blur(.2px);
+            opacity: .85;
+            z-index: -1;
+        }
+
+        .language-hero__badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.68);
+            border: 1px solid rgba(220,38,38,.12);
+            color: var(--deep-red);
+            font-size: .78rem;
+            font-weight: 850;
+            margin-bottom: 18px;
+            box-shadow: 0 10px 28px rgba(15,23,42,.06);
+        }
+
+        .language-hero__title {
+            margin: 0 auto;
+            color: var(--ink);
+            font-size: clamp(2.15rem, 3.8vw, 3.55rem);
+            line-height: 1.02;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .language-hero__copy {
+            max-width: 720px;
+            margin: 18px auto 0;
+            color: #526174;
+            font-size: 1.08rem;
+            line-height: 1.72;
+        }
+
+        .language-selector-card {
+            max-width: 900px;
+            margin: -18px auto 0;
+            padding: 26px;
+            border-radius: 28px;
+            border: 1px solid rgba(255,255,255,.78);
+            background: rgba(255,255,255,.78);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 24px 64px rgba(15,23,42,.10);
+        }
+
+        .language-selector-heading {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .language-selector-heading span {
+            color: var(--ink);
+            font-size: 1rem;
+            font-weight: 900;
+        }
+
+        .language-selector-heading small {
+            color: var(--muted);
+            font-size: .85rem;
+            font-weight: 650;
+        }
+
+        .main div[data-testid="stRadio"] div[role="radiogroup"] {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .main div[data-testid="stRadio"] div[role="radiogroup"] > label {
+            min-height: 86px;
+            margin: 0;
+            padding: 17px 18px;
+            border-radius: 20px;
+            border: 1px solid rgba(148,163,184,.24);
+            background:
+                linear-gradient(145deg, rgba(255,255,255,.96), rgba(255,250,244,.78));
+            box-shadow: 0 12px 32px rgba(15,23,42,.055);
+            transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+            cursor: pointer;
+        }
+
+        .main div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
+            transform: translateY(-3px);
+            border-color: rgba(220,38,38,.30);
+            box-shadow: 0 18px 42px rgba(15,23,42,.10);
+            background:
+                linear-gradient(145deg, rgba(255,255,255,1), rgba(255,241,242,.82));
+        }
+
+        .main div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) {
+            border-color: rgba(220,38,38,.62);
+            background:
+                linear-gradient(145deg, rgba(255,255,255,.98), rgba(255,241,242,.92) 46%, rgba(223,248,236,.72));
+            box-shadow:
+                0 20px 50px rgba(220,38,38,.16),
+                inset 0 0 0 1px rgba(220,38,38,.18);
+        }
+
+        .main div[data-testid="stRadio"] div[role="radiogroup"] > label > div:first-child {
+            display: none;
+        }
+
+        .main div[data-testid="stRadio"] div[role="radiogroup"] > label p {
+            color: var(--ink);
+            font-size: 1rem;
+            font-weight: 850;
+            line-height: 1.3;
+            white-space: normal;
+        }
+
+        .main div[data-testid="stRadio"] div[role="radiogroup"] > label p::first-letter {
+            color: var(--deep-red);
+        }
+
+        .language-action {
+            display: flex;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .language-action div.stButton {
+            width: auto;
+        }
+
+        .language-action div.stButton > button {
+            min-width: 190px;
+            min-height: 50px;
+            padding: 0 30px;
+            border-radius: 999px;
+            font-size: .98rem;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .hero-panel {
@@ -265,6 +469,44 @@ def load_custom_css() -> None:
         }
 
         @media (max-width: 760px) {
+            .language-gate {
+                margin-top: 1.2vh;
+                padding: 0 4px 34px;
+            }
+            .language-hero {
+                padding: 34px 20px 32px;
+                border-radius: 26px;
+            }
+            .language-hero__badge {
+                font-size: .72rem;
+            }
+            .language-hero__title {
+                font-size: 2rem;
+                white-space: normal;
+            }
+            .language-hero__copy {
+                font-size: .98rem;
+            }
+            .language-selector-card {
+                padding: 18px;
+                border-radius: 24px;
+            }
+            .language-selector-heading {
+                display: block;
+            }
+            .language-selector-heading small {
+                display: block;
+                margin-top: 4px;
+            }
+            .main div[data-testid="stRadio"] div[role="radiogroup"] {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+            .main div[data-testid="stRadio"] div[role="radiogroup"] > label {
+                min-height: 72px;
+                padding: 14px;
+                border-radius: 17px;
+            }
             .hero-panel {
                 padding: 22px;
                 border-radius: 22px;
