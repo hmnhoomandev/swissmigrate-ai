@@ -6,7 +6,7 @@ from utils.translations import t
 
 def render_language_gate() -> None:
     st.markdown("<div class='center-shell'>", unsafe_allow_html=True)
-    st.title("FirstStep AI Switzerland")
+    st.title("SwissMigrate AI")
     st.caption("Choose your language. All UI and AI output will follow it.")
 
     options = {language["name"]: language for language in LANGUAGES}

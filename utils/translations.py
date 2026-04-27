@@ -5,7 +5,7 @@ from utils.constants import LANGUAGE_BY_CODE
 
 TEXT = {
     "en": {
-        "app_name": "FirstStep AI Switzerland",
+        "app_name": "SwissMigrate AI",
         "app_tagline": "Clear help for your first 365 days and beyond.",
         "choose_language": "Choose your language",
         "language_help": "All screens and AI answers will use this language.",
@@ -57,7 +57,7 @@ TEXT = {
         "saved": "Saved",
     },
     "fr": {
-        "app_name": "FirstStep AI Suisse",
+        "app_name": "SwissMigrate AI",
         "app_tagline": "Une aide claire pour les 365 premiers jours et après.",
         "choose_language": "Choisissez votre langue",
         "language_help": "Tous les écrans et réponses IA utiliseront cette langue.",
@@ -109,7 +109,7 @@ TEXT = {
         "saved": "Enregistré",
     },
     "es": {
-        "app_name": "FirstStep AI Suiza",
+        "app_name": "SwissMigrate AI",
         "app_tagline": "Ayuda clara para tus primeros 365 días y más.",
         "choose_language": "Elige tu idioma",
         "language_help": "Todas las pantallas y respuestas usarán este idioma.",
@@ -161,7 +161,7 @@ TEXT = {
         "saved": "Guardado",
     },
     "tr": {
-        "app_name": "FirstStep AI İsviçre",
+        "app_name": "SwissMigrate AI",
         "app_tagline": "İlk 365 gün ve sonrası için açık destek.",
         "choose_language": "Dilinizi seçin",
         "language_help": "Tüm ekranlar ve yapay zeka yanıtları bu dilde olur.",
@@ -213,7 +213,7 @@ TEXT = {
         "saved": "Kaydedildi",
     },
     "uk": {
-        "app_name": "FirstStep AI Швейцарія",
+        "app_name": "SwissMigrate AI",
         "app_tagline": "Зрозуміла допомога для перших 365 днів і надалі.",
         "choose_language": "Оберіть мову",
         "language_help": "Усі екрани та відповіді ШІ будуть цією мовою.",
@@ -265,7 +265,7 @@ TEXT = {
         "saved": "Збережено",
     },
     "zh": {
-        "app_name": "FirstStep AI 瑞士",
+        "app_name": "SwissMigrate AI",
         "app_tagline": "为前365天及以后提供清晰帮助。",
         "choose_language": "选择语言",
         "language_help": "所有界面和AI回答都会使用该语言。",
@@ -317,7 +317,7 @@ TEXT = {
         "saved": "已保存",
     },
     "fa": {
-        "app_name": "FirstStep AI سوئیس",
+        "app_name": "SwissMigrate AI",
         "app_tagline": "راهنمای روشن برای ۳۶۵ روز اول و بعد از آن.",
         "choose_language": "زبان خود را انتخاب کنید",
         "language_help": "همه صفحه‌ها و پاسخ‌های هوش مصنوعی به همین زبان خواهند بود.",
@@ -369,7 +369,7 @@ TEXT = {
         "saved": "ذخیره شد",
     },
     "ar": {
-        "app_name": "FirstStep AI سويسرا",
+        "app_name": "SwissMigrate AI",
         "app_tagline": "مساعدة واضحة لأول 365 يوما وما بعدها.",
         "choose_language": "اختر لغتك",
         "language_help": "كل الشاشات وإجابات الذكاء الاصطناعي ستكون بهذه اللغة.",

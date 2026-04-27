@@ -1,6 +1,6 @@
-# FirstStep AI Switzerland
+# SwissMigrate AI
 
-FirstStep AI is a multilingual assistant for migrants, refugees, asylum seekers,
+SwissMigrate AI is a multilingual assistant for migrants, refugees, asylum seekers,
 workers, and students in Switzerland. It helps people understand official
 letters, plan their first 365 days, and find canton-specific services.
 

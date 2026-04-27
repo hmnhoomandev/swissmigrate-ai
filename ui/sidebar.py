@@ -6,7 +6,7 @@ def render_sidebar():
         st.markdown(
             """
             <div class="sidebar-logo">🧭</div>
-            <p class="sidebar-title">IMMIGRATION AI ASSISTANT</p>
+            <p class="sidebar-title">SwissMigrate AI</p>
             <p class="sidebar-subtitle">Understand. Navigate. Belong.</p>
             """,
             unsafe_allow_html=True,

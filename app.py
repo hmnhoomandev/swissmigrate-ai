@@ -11,8 +11,8 @@ from utils.translations import t
 
 
 st.set_page_config(
-    page_title="FirstStep AI Switzerland",
-    page_icon="FS",
+    page_title="SwissMigrate AI",
+    page_icon="SM",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -28,7 +28,7 @@ if "profile_complete" not in st.session_state:
     st.stop()
 
 with st.sidebar:
-    st.markdown("<div class='brand-mark'>FS</div>", unsafe_allow_html=True)
+    st.markdown("<div class='brand-mark'>SM</div>", unsafe_allow_html=True)
     st.markdown(f"### {t('app_name')}")
     st.caption(t("app_tagline"))
     st.divider()

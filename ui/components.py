@@ -9,7 +9,7 @@ def render_header():
             """
             <h1 class="app-title">Hello, Hooman! 👋</h1>
             <p class="app-subtitle">
-                Welcome to <span class="gradient-text">IMMIGRATION AI ASSISTANT</span>.
+                Welcome to <span class="gradient-text">SwissMigrate AI</span>.
                 How can I help you today?
             </p>
             """,
