@@ -5,15 +5,19 @@ from services.rag_service import retrieve_context
 from services.safety_service import detect_emergency, safety_banner
 from services.security_service import mask_pii
 from services.storage_service import save_interaction
+from ui.components import render_page_hero
 from utils.translations import current_language_name, t
 
 
 def render_canton_navigator() -> None:
-    st.subheader(t("canton_navigator"))
-    st.write(t("navigator_desc"))
+    render_page_hero(t("canton_navigator"), t("navigator_desc"), t("canton_navigator"), st.session_state["canton_code"])
 
+    st.markdown("<div class='soft-card'>", unsafe_allow_html=True)
     question = st.text_area(t("ask_question"), placeholder=t("question_placeholder"), height=140)
-    if st.button(t("ask"), use_container_width=True):
+    ask_clicked = st.button(t("ask"), use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    if ask_clicked:
         if not question.strip():
             st.warning(t("ask_question"))
             return

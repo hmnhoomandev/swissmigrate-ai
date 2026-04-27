@@ -120,8 +120,15 @@ To enable image OCR, install the Tesseract system package and make sure the
 
 ## UX Improvements Included
 
+- Modern Swiss-inspired visual design with warm cards, page heroes, consistent
+  navigation, and local flag support.
 - Language is selected before anything else and controls all UI labels.
 - Canton and user type are stored once, then reused across modules.
+- Dashboard service cards are clickable and navigate to the same pages as the
+  sidebar.
+- The Swiss flag appears in branding, and the selected canton is shown with a
+  canton flag badge. Missing canton SVGs fall back to local generated
+  placeholders.
 - Letter Helper shows masked text for transparency.
 - First 365 Days Guide creates actionable checkbox steps.
 - Canton Navigator shows sources and warns when confidence is low.

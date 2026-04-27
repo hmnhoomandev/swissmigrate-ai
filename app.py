@@ -6,13 +6,14 @@ from modules.language_selection import render_language_gate
 from modules.letter_helper import render_letter_helper
 from modules.user_profile import render_profile_gate, render_profile_summary
 from services.storage_service import get_recent_interactions
+from ui.components import PAGE_KEYS, page_label, render_brand, render_page_hero, render_service_shell, set_page
 from ui.styles import load_custom_css
 from utils.translations import t
 
 
 st.set_page_config(
     page_title="SwissMigrate AI",
-    page_icon="SM",
+    page_icon="🇨🇭",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -27,55 +28,65 @@ if "profile_complete" not in st.session_state:
     render_profile_gate()
     st.stop()
 
+if "nav_page" not in st.session_state:
+    st.session_state["nav_page"] = "dashboard"
+
 with st.sidebar:
-    st.markdown("<div class='brand-mark'>SM</div>", unsafe_allow_html=True)
-    st.markdown(f"### {t('app_name')}")
-    st.caption(t("app_tagline"))
+    render_brand(compact=True)
     st.divider()
-    page = st.radio(
+    selected_page = st.radio(
         t("navigation"),
-        [
-            t("dashboard"),
-            t("letter_helper"),
-            t("first_365"),
-            t("canton_navigator"),
-            t("history"),
-            t("settings"),
-        ],
+        PAGE_KEYS,
+        index=PAGE_KEYS.index(st.session_state["nav_page"]),
+        format_func=page_label,
         label_visibility="collapsed",
     )
+    if selected_page != st.session_state["nav_page"]:
+        set_page(selected_page)
+        st.rerun()
     st.divider()
     render_profile_summary(compact=True)
 
-st.title(t("app_name"))
-st.caption(t("app_tagline"))
+page = st.session_state["nav_page"]
 
-if page == t("dashboard"):
+if page == "dashboard":
+    render_page_hero(t("today_focus"), t("dashboard_intro"), t("dashboard"), st.session_state["canton_code"])
     render_profile_summary(compact=False)
-    st.subheader(t("today_focus"))
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.markdown(f"**{t('letter_helper')}**")
-        st.write(t("letter_helper_desc"))
-    with col2:
-        st.markdown(f"**{t('first_365')}**")
-        st.write(t("first_365_desc"))
-    with col3:
-        st.markdown(f"**{t('canton_navigator')}**")
-        st.write(t("navigator_desc"))
+
+    services = [
+        ("letter_helper", "✉", t("letter_helper"), t("letter_helper_desc"), t("open_letter_helper")),
+        ("first_365", "365", t("first_365"), t("first_365_desc"), t("open_first_365")),
+        ("canton_navigator", "⌖", t("canton_navigator"), t("navigator_desc"), t("open_canton_navigator")),
+    ]
+    cols = st.columns(3)
+    for col, (page_key, icon, title, description, button_label) in zip(cols, services):
+        with col:
+            render_service_shell(icon, title, description)
+            if st.button(button_label, key=f"open-{page_key}", use_container_width=True):
+                set_page(page_key)
+                st.rerun()
+
+    st.markdown("")
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.markdown(f"<div class='stat-card'><b>{t('privacy_first')}</b><br>{t('privacy_first_desc')}</div>", unsafe_allow_html=True)
+    with c2:
+        st.markdown(f"<div class='stat-card'><b>{t('source_grounded')}</b><br>{t('source_grounded_desc')}</div>", unsafe_allow_html=True)
+    with c3:
+        st.markdown(f"<div class='stat-card'><b>{t('human_friendly')}</b><br>{t('human_friendly_desc')}</div>", unsafe_allow_html=True)
     st.info(t("safety_notice"))
 
-elif page == t("letter_helper"):
+elif page == "letter_helper":
     render_letter_helper()
 
-elif page == t("first_365"):
+elif page == "first_365":
     render_first_365_guide()
 
-elif page == t("canton_navigator"):
+elif page == "canton_navigator":
     render_canton_navigator()
 
-elif page == t("history"):
-    st.subheader(t("history"))
+elif page == "history":
+    render_page_hero(t("history"), t("history_intro"), t("history"), st.session_state["canton_code"])
     rows = get_recent_interactions(limit=20)
     if not rows:
         st.info(t("no_history"))
@@ -85,6 +96,6 @@ elif page == t("history"):
                 st.write(row.get("summary", ""))
                 st.caption(row.get("metadata", ""))
 
-elif page == t("settings"):
-    st.subheader(t("settings"))
+elif page == "settings":
+    render_page_hero(t("settings"), t("settings_intro"), t("settings"), st.session_state["canton_code"])
     render_profile_gate(update_mode=True)

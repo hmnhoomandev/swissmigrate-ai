@@ -4,18 +4,35 @@ from services.llm_service import analyze_letter
 from services.ocr_service import extract_text_from_upload
 from services.security_service import mask_pii
 from services.storage_service import save_interaction
+from ui.components import render_page_hero
 from utils.translations import current_language_name, t
 
 
 def render_letter_helper() -> None:
-    st.subheader(t("letter_helper"))
-    st.write(t("letter_helper_desc"))
+    render_page_hero(t("letter_helper"), t("letter_helper_desc"), t("letter_helper"), st.session_state["canton_code"])
 
-    consent = st.checkbox(t("upload_consent"))
-    uploaded_file = st.file_uploader(t("upload_file"), type=["pdf", "png", "jpg", "jpeg"])
-    pasted_text = st.text_area(t("paste_text"), height=220)
+    left, right = st.columns([1.05, 0.95], gap="large")
+    with left:
+        st.markdown("<div class='soft-card'>", unsafe_allow_html=True)
+        consent = st.checkbox(t("upload_consent"))
+        uploaded_file = st.file_uploader(t("upload_file"), type=["pdf", "png", "jpg", "jpeg"])
+        pasted_text = st.text_area(t("paste_text"), height=220)
+        analyze_clicked = st.button(t("analyze"), use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
-    if st.button(t("analyze"), use_container_width=True):
+    with right:
+        st.markdown(
+            f"""
+            <div class="soft-card">
+                <h3>{t("privacy_first")}</h3>
+                <p class="hero-copy">{t("privacy_first_desc")}</p>
+                <p class="hero-copy">{t("safety_notice")}</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    if analyze_clicked:
         if not consent:
             st.warning(t("missing_consent"))
             return
@@ -39,6 +56,7 @@ def render_letter_helper() -> None:
             {"pii_counts": masked.counts, "urgency": result.get("urgency", "")},
         )
 
+        st.markdown("")
         st.subheader(t("analysis_result"))
         if result.get("service_warning"):
             st.warning(result["service_warning"])

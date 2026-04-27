@@ -3,12 +3,12 @@ import streamlit as st
 from services.llm_service import personalize_guide
 from services.rag_service import build_first_365_checklist
 from services.storage_service import save_interaction
+from ui.components import render_page_hero
 from utils.translations import current_language_name, t
 
 
 def render_first_365_guide() -> None:
-    st.subheader(t("first_365"))
-    st.write(t("first_365_desc"))
+    render_page_hero(t("first_365"), t("first_365_desc"), t("first_365"), st.session_state["canton_code"])
 
     profile = {
         "language": current_language_name(),
@@ -17,7 +17,12 @@ def render_first_365_guide() -> None:
         "user_type": st.session_state["user_type"],
     }
 
-    if st.button(t("generate_guide"), use_container_width=True):
+    st.markdown("<div class='soft-card'>", unsafe_allow_html=True)
+    st.write(f"{profile['canton_name']} - {t(profile['user_type'])}")
+    generate_clicked = st.button(t("generate_guide"), use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    if generate_clicked:
         checklist = build_first_365_checklist(profile["canton_code"], profile["user_type"])
         with st.spinner(t("generate_guide")):
             guide = personalize_guide(profile, checklist, current_language_name())
