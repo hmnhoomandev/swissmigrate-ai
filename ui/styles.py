@@ -8,13 +8,15 @@ def load_custom_css() -> None:
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
         :root {
-            --swiss-red: #dc2626;
-            --deep-red: #991b1b;
-            --lake: #0f766e;
+            --swiss-red: #e30613;
+            --deep-red: #a70d17;
+            --navy: #061b3d;
+            --navy-soft: #123564;
+            --lake: #0e5c83;
             --mint: #dff8ec;
             --sun: #f6b84b;
             --rose: #fff1f2;
-            --ink: #172033;
+            --ink: #061b3d;
             --muted: #64748b;
             --paper: #fffaf4;
             --card: rgba(255,255,255,.86);
@@ -29,7 +31,9 @@ def load_custom_css() -> None:
         .stApp {
             color: var(--ink);
             background:
-                linear-gradient(118deg, rgba(255,241,242,.92) 0%, rgba(255,250,244,.90) 32%, rgba(238,251,246,.92) 68%, rgba(248,251,255,.96) 100%),
+                radial-gradient(circle at 8% 5%, rgba(227,6,19,.12), transparent 28%),
+                radial-gradient(circle at 90% 2%, rgba(6,27,61,.12), transparent 30%),
+                linear-gradient(118deg, rgba(255,241,242,.92) 0%, rgba(255,250,244,.94) 34%, rgba(247,250,253,.96) 68%, rgba(239,245,252,.98) 100%),
                 linear-gradient(180deg, #fffaf4 0%, #f8fbff 100%);
         }
 
@@ -58,101 +62,39 @@ def load_custom_css() -> None:
             margin-bottom: 12px;
         }
 
-        .brand-logo {
-            position: relative;
+        .brand-logo-frame {
             width: 48px;
             height: 48px;
             flex: 0 0 48px;
             overflow: hidden;
             border-radius: 15px;
-            background:
-                linear-gradient(145deg, #fffbf7 0%, #ffe8e6 42%, #dff8ec 100%);
-            border: 1px solid rgba(255,255,255,.82);
-            box-shadow:
-                0 16px 34px rgba(153,27,27,.16),
-                inset 0 1px 0 rgba(255,255,255,.92);
+            background: white;
+            border: 1px solid rgba(255,255,255,.86);
+            box-shadow: 0 14px 34px rgba(6,27,61,.14);
+            transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
         }
 
-        .brand-logo__cross,
-        .brand-logo__path,
-        .brand-logo__node {
-            position: absolute;
+        .brand-row:hover .brand-logo-frame {
+            transform: translateY(-1px) scale(1.035);
+            box-shadow: 0 18px 42px rgba(6,27,61,.20);
+        }
+
+        .brand-logo-img {
+            width: 100%;
+            height: 100%;
             display: block;
+            object-fit: cover;
         }
 
-        .brand-logo__cross {
-            left: 11px;
-            top: 11px;
-            width: 15px;
-            height: 15px;
-        }
-
-        .brand-logo__cross:before,
-        .brand-logo__cross:after {
-            content: "";
-            position: absolute;
-            border-radius: 999px;
-            background: var(--swiss-red);
-        }
-
-        .brand-logo__cross:before {
-            left: 6px;
-            top: 0;
-            width: 4px;
-            height: 15px;
-        }
-
-        .brand-logo__cross:after {
-            left: 0;
-            top: 6px;
-            width: 15px;
-            height: 4px;
-        }
-
-        .brand-logo__path {
-            left: 16px;
-            bottom: 12px;
-            width: 24px;
-            height: 18px;
-            border-right: 4px solid var(--lake);
-            border-bottom: 4px solid var(--lake);
-            border-radius: 0 0 14px 0;
-            transform: skewX(-12deg);
-        }
-
-        .brand-logo__path:after {
-            content: "";
-            position: absolute;
-            right: -7px;
-            top: -6px;
-            width: 9px;
-            height: 9px;
-            border-top: 4px solid var(--lake);
-            border-right: 4px solid var(--lake);
-            transform: rotate(45deg);
-            border-radius: 2px;
-        }
-
-        .brand-logo__node {
-            right: 11px;
-            top: 12px;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--ink);
-            box-shadow:
-                -8px 18px 0 -1px rgba(23,32,51,.80),
-                0 18px 0 -1px rgba(220,38,38,.80);
-        }
-
-        .brand-row--compact .brand-logo {
+        .brand-row--compact .brand-logo-frame {
             width: 40px;
             height: 40px;
             flex-basis: 40px;
-            border-radius: 13px;
+            border-radius: 12px;
         }
 
         .brand-title {
+            color: var(--navy);
             font-size: 1.12rem;
             font-weight: 900;
             margin: 0;
@@ -167,37 +109,41 @@ def load_custom_css() -> None:
         .language-gate {
             position: relative;
             max-width: 1120px;
-            margin: 2.2vh auto 0;
-            padding: 0 18px 44px;
+            margin: 1.8vh auto 0;
+            padding: 0 18px 52px;
             animation: fadeUp .55s ease both;
         }
 
         .language-gate .brand-row {
-            justify-content: center;
-            margin-bottom: 22px;
+            justify-content: flex-start;
+            width: fit-content;
+            margin-bottom: 24px;
         }
 
         .language-gate .brand-caption {
             text-align: left;
         }
 
-        .language-hero {
+        .language-landing {
             position: relative;
             overflow: hidden;
-            text-align: center;
+            display: grid;
+            grid-template-columns: minmax(0, 1.04fr) minmax(330px, .82fr);
+            align-items: center;
+            gap: 34px;
             border-radius: 34px;
-            padding: 54px 48px 48px;
+            padding: 42px;
             border: 1px solid rgba(255,255,255,.74);
             background:
-                linear-gradient(135deg, rgba(255,255,255,.96), rgba(255,243,238,.94) 44%, rgba(230,249,240,.92)),
+                linear-gradient(135deg, rgba(255,255,255,.97), rgba(255,242,243,.94) 44%, rgba(239,245,252,.94)),
                 repeating-linear-gradient(135deg, rgba(255,255,255,.32) 0, rgba(255,255,255,.32) 1px, transparent 1px, transparent 18px);
             box-shadow:
-                0 34px 90px rgba(15,23,42,.13),
+                0 34px 90px rgba(6,27,61,.13),
                 inset 0 1px 0 rgba(255,255,255,.72);
             isolation: isolate;
         }
 
-        .language-hero:before {
+        .language-landing:before {
             content: "";
             position: absolute;
             inset: 12px;
@@ -207,7 +153,7 @@ def load_custom_css() -> None:
             z-index: -1;
         }
 
-        .language-hero:after {
+        .language-landing:after {
             content: "";
             position: absolute;
             width: 420px;
@@ -215,10 +161,15 @@ def load_custom_css() -> None:
             right: -110px;
             top: 34px;
             border-radius: 32px;
-            background: linear-gradient(90deg, rgba(220,38,38,.14), rgba(246,184,75,.16), rgba(15,118,110,.14));
+            background: linear-gradient(90deg, rgba(227,6,19,.13), rgba(255,255,255,.22), rgba(6,27,61,.13));
             transform: rotate(-16deg);
             opacity: .9;
             z-index: -1;
+        }
+
+        .language-copy {
+            position: relative;
+            z-index: 1;
         }
 
         .language-hero__badge {
@@ -228,7 +179,7 @@ def load_custom_css() -> None:
             padding: 9px 15px;
             border-radius: 999px;
             background: rgba(255,255,255,.68);
-            border: 1px solid rgba(220,38,38,.12);
+            border: 1px solid rgba(227,6,19,.14);
             color: var(--deep-red);
             font-size: .8rem;
             font-weight: 850;
@@ -237,9 +188,9 @@ def load_custom_css() -> None:
         }
 
         .language-hero__title {
-            margin: 0 auto;
+            margin: 0;
             color: var(--ink);
-            font-size: 4.45rem;
+            font-size: 4.2rem;
             line-height: 1.02;
             font-weight: 900;
             white-space: nowrap;
@@ -247,8 +198,8 @@ def load_custom_css() -> None:
         }
 
         .language-hero__copy {
-            max-width: 820px;
-            margin: 20px auto 0;
+            max-width: 640px;
+            margin: 20px 0 0;
             color: #526174;
             font-size: 1.12rem;
             line-height: 1.65;
@@ -256,7 +207,7 @@ def load_custom_css() -> None:
 
         .language-benefits {
             display: flex;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 10px;
             flex-wrap: wrap;
             margin-top: 24px;
@@ -281,18 +232,46 @@ def load_custom_css() -> None:
             width: 7px;
             height: 7px;
             border-radius: 999px;
-            background: linear-gradient(135deg, var(--swiss-red), var(--lake));
+            background: linear-gradient(135deg, var(--swiss-red), var(--navy));
+        }
+
+        .language-visual {
+            position: relative;
+            z-index: 1;
+            border-radius: 28px;
+            overflow: hidden;
+            background: rgba(255,255,255,.84);
+            border: 1px solid rgba(255,255,255,.88);
+            box-shadow:
+                0 28px 70px rgba(6,27,61,.16),
+                inset 0 1px 0 rgba(255,255,255,.86);
+            transform: rotate(1.2deg);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .language-visual:hover {
+            transform: rotate(0deg) translateY(-3px);
+            box-shadow: 0 34px 82px rgba(6,27,61,.20);
+        }
+
+        .language-banner-img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
         }
 
         .language-selector-card {
-            max-width: 930px;
-            margin: -20px auto 0;
-            padding: 24px;
+            max-width: 860px;
+            margin: 30px auto 0;
+            padding: 28px;
             border-radius: 30px;
             border: 1px solid rgba(255,255,255,.78);
             background: rgba(255,255,255,.82);
             backdrop-filter: blur(18px);
-            box-shadow: 0 28px 70px rgba(15,23,42,.12);
+            box-shadow:
+                0 28px 70px rgba(6,27,61,.12),
+                inset 0 1px 0 rgba(255,255,255,.76);
         }
 
         .language-selector-heading {
@@ -315,45 +294,47 @@ def load_custom_css() -> None:
             font-weight: 650;
         }
 
-        .language-gate div[data-testid="stRadio"] div[role="radiogroup"] {
+        .main div[data-testid="stRadio"] div[role="radiogroup"] {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
         }
 
-        .language-gate div[data-testid="stRadio"] div[role="radiogroup"] > label {
+        .main div[data-testid="stRadio"] div[role="radiogroup"] > label {
             position: relative;
-            min-height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 78px;
             margin: 0;
-            padding: 0 18px;
-            border-radius: 999px;
-            border: 1px solid rgba(148,163,184,.24);
+            padding: 0 22px;
+            border-radius: 22px;
+            border: 1px solid rgba(148,163,184,.22);
             background:
-                linear-gradient(145deg, rgba(255,255,255,.98), rgba(255,250,244,.76));
-            box-shadow: 0 12px 30px rgba(15,23,42,.052);
+                linear-gradient(145deg, rgba(255,255,255,.99), rgba(248,250,252,.86));
+            box-shadow: 0 12px 30px rgba(6,27,61,.055);
             transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
             cursor: pointer;
-            justify-content: center;
         }
 
-        .language-gate div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
+        .main div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
             transform: translateY(-3px);
-            border-color: rgba(220,38,38,.30);
-            box-shadow: 0 18px 42px rgba(15,23,42,.10);
+            border-color: rgba(227,6,19,.34);
+            box-shadow: 0 18px 42px rgba(6,27,61,.11);
             background:
                 linear-gradient(145deg, rgba(255,255,255,1), rgba(255,241,242,.82));
         }
 
-        .language-gate div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) {
-            border-color: rgba(220,38,38,.62);
+        .main div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) {
+            border-color: rgba(227,6,19,.72);
             background:
-                linear-gradient(145deg, rgba(255,255,255,.98), rgba(255,241,242,.92) 52%, rgba(223,248,236,.78));
+                linear-gradient(145deg, rgba(255,255,255,.99), rgba(255,238,240,.96) 48%, rgba(238,244,252,.94));
             box-shadow:
-                0 20px 50px rgba(220,38,38,.16),
-                inset 0 0 0 1px rgba(220,38,38,.18);
+                0 20px 50px rgba(227,6,19,.16),
+                inset 0 0 0 1px rgba(227,6,19,.18);
         }
 
-        .language-gate div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked):after {
+        .main div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked):after {
             content: "";
             position: absolute;
             right: 16px;
@@ -366,35 +347,26 @@ def load_custom_css() -> None:
             border-radius: 1px;
         }
 
-        .language-gate div[data-testid="stRadio"] div[role="radiogroup"] > label > div:first-child {
+        .main div[data-testid="stRadio"] div[role="radiogroup"] > label > div:first-child {
             display: none;
         }
 
-        .language-gate div[data-testid="stRadio"] div[role="radiogroup"] > label p {
+        .main div[data-testid="stRadio"] div[role="radiogroup"] > label p {
             color: var(--ink);
-            font-size: 1.02rem;
-            font-weight: 850;
+            font-size: 1.12rem;
+            font-weight: 900;
             line-height: 1.2;
             white-space: normal;
+            text-align: center;
         }
 
-        .language-action {
-            display: flex;
-            justify-content: center;
-            margin-top: 26px;
-        }
-
-        .language-action div.stButton {
-            width: auto;
-        }
-
-        .language-action div.stButton > button {
+        .language-gate div.stButton > button {
             min-width: 196px;
             min-height: 52px;
             padding: 0 32px;
             border-radius: 999px;
             font-size: 1rem;
-            background: linear-gradient(135deg, #e11d48, #dc2626 44%, #991b1b);
+            background: linear-gradient(135deg, var(--swiss-red), #d20d19 44%, var(--deep-red));
         }
 
         @keyframes fadeUp {
@@ -442,6 +414,14 @@ def load_custom_css() -> None:
             font-weight: 800;
             font-size: .82rem;
             margin-bottom: 14px;
+        }
+
+        .hero-logo-img {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 8px 18px rgba(6,27,61,.14);
         }
 
         .hero-title {
@@ -596,15 +576,25 @@ def load_custom_css() -> None:
                 margin-top: 1.2vh;
                 padding: 0 4px 34px;
             }
-            .language-hero {
-                padding: 34px 20px 32px;
+            .language-gate .brand-row {
+                margin-left: 2px;
+            }
+            .language-landing {
+                grid-template-columns: 1fr;
+                padding: 26px 18px 20px;
                 border-radius: 26px;
+            }
+            .language-visual {
+                max-width: 280px;
+                margin: 0 auto;
+                border-radius: 22px;
+                transform: none;
             }
             .language-hero__badge {
                 font-size: .72rem;
             }
             .language-hero__title {
-                font-size: 2.1rem;
+                font-size: 2.25rem;
                 white-space: nowrap;
             }
             .language-hero__copy {
@@ -621,11 +611,11 @@ def load_custom_css() -> None:
                 display: block;
                 margin-top: 4px;
             }
-            .language-gate div[data-testid="stRadio"] div[role="radiogroup"] {
+            .main div[data-testid="stRadio"] div[role="radiogroup"] {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 10px;
             }
-            .language-gate div[data-testid="stRadio"] div[role="radiogroup"] > label {
+            .main div[data-testid="stRadio"] div[role="radiogroup"] > label {
                 min-height: 72px;
                 padding: 14px;
                 border-radius: 17px;

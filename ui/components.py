@@ -1,6 +1,7 @@
 import streamlit as st
 
-from ui.flags import canton_flag_uri, flag_img, swiss_flag_uri
+from ui.brand import brand_image
+from ui.flags import canton_flag_uri, flag_img
 from utils.translations import t
 
 
@@ -17,14 +18,11 @@ def set_page(page_key: str) -> None:
 
 def render_brand(compact: bool = False) -> None:
     size_class = "brand-row--compact" if compact else "brand-row--full"
+    logo = brand_image("logo-icon.png", "SwissMigrate AI logo", "brand-logo-img")
     st.markdown(
         f"""
         <div class="brand-row {size_class}">
-            <div class="brand-logo" aria-hidden="true">
-                <span class="brand-logo__cross"></span>
-                <span class="brand-logo__path"></span>
-                <span class="brand-logo__node"></span>
-            </div>
+            <div class="brand-logo-frame">{logo}</div>
             <div>
                 <p class="brand-title">{t("app_name")}</p>
                 <p class="brand-caption">{t("app_tagline")}</p>
@@ -36,14 +34,14 @@ def render_brand(compact: bool = False) -> None:
 
 
 def render_page_hero(title: str, copy: str, eyebrow: str | None = None, canton_code: str | None = None) -> None:
-    flag = flag_img(swiss_flag_uri(), "Swiss flag", 28)
+    logo = brand_image("logo-icon.png", "SwissMigrate AI logo", "hero-logo-img")
     canton = ""
     if canton_code:
         canton = flag_img(canton_flag_uri(canton_code), f"{canton_code} canton flag", 28)
     st.markdown(
         f"""
         <section class="hero-panel">
-            <div class="hero-eyebrow">{flag}{canton}<span>{eyebrow or t("app_name")}</span></div>
+            <div class="hero-eyebrow">{logo}{canton}<span>{eyebrow or t("app_name")}</span></div>
             <h1 class="hero-title">{title}</h1>
             <p class="hero-copy">{copy}</p>
         </section>
