@@ -1,0 +1,199 @@
+{
+  "first_365_template": [
+    {
+      "topic": "registration_admin",
+      "title": "Register your arrival and keep official addresses updated",
+      "priority": 1,
+      "timeframe": "Days 1-14",
+      "audience": ["all"],
+      "actions": ["Confirm where you must register", "Keep copies of confirmations", "Tell offices if your address changes"]
+    },
+    {
+      "topic": "legal_permits",
+      "title": "Understand your permit, rights, and obligations",
+      "priority": 2,
+      "timeframe": "Days 1-30",
+      "audience": ["all"],
+      "actions": ["Identify your permit type", "Check work and travel rules", "Ask for help before missing a deadline"]
+    },
+    {
+      "topic": "healthcare",
+      "title": "Organize health insurance and medical care",
+      "priority": 3,
+      "timeframe": "Days 1-90",
+      "audience": ["all"],
+      "actions": ["Clarify insurance requirements", "Find a family doctor or clinic", "Save emergency numbers 144, 117, and 118"]
+    },
+    {
+      "topic": "housing",
+      "title": "Secure safe housing and know tenant basics",
+      "priority": 4,
+      "timeframe": "Days 1-120",
+      "audience": ["all"],
+      "actions": ["Keep rental documents", "Ask before signing unclear contracts", "Learn how deposits and notices work"]
+    },
+    {
+      "topic": "language_learning",
+      "title": "Start local language learning early",
+      "priority": 5,
+      "timeframe": "Days 15-120",
+      "audience": ["all"],
+      "actions": ["Ask the integration office about subsidized courses", "Choose a realistic weekly schedule", "Use language apps between classes"]
+    },
+    {
+      "topic": "employment",
+      "title": "Prepare for work or job search",
+      "priority": 6,
+      "timeframe": "Days 30-180",
+      "audience": ["refugee", "migrant", "worker", "student"],
+      "actions": ["Check whether your permit allows work", "Prepare a Swiss-style CV", "Ask about recognition of diplomas"]
+    },
+    {
+      "topic": "education",
+      "title": "Plan school, training, or study steps",
+      "priority": 7,
+      "timeframe": "Days 30-180",
+      "audience": ["all"],
+      "actions": ["Contact the school or education office", "Collect certificates", "Ask about bridging or language support"]
+    },
+    {
+      "topic": "financial_support",
+      "title": "Clarify benefits, taxes, bank access, and budgeting",
+      "priority": 8,
+      "timeframe": "Days 30-180",
+      "audience": ["all"],
+      "actions": ["Open a basic bank or postal account if eligible", "Ask about social support rules", "Keep every official payment letter"]
+    },
+    {
+      "topic": "mental_health",
+      "title": "Find emotional and trauma-informed support",
+      "priority": 9,
+      "timeframe": "Any time",
+      "audience": ["all"],
+      "actions": ["Call 143 if you need urgent emotional support", "Ask a doctor for referral options", "Use trusted community support"]
+    },
+    {
+      "topic": "public_transport",
+      "title": "Set up transport for daily life",
+      "priority": 10,
+      "timeframe": "Days 1-60",
+      "audience": ["all"],
+      "actions": ["Check local monthly passes", "Consider a SwissPass or half-fare card", "Save your regular route"]
+    },
+    {
+      "topic": "social_integration",
+      "title": "Build a local support network",
+      "priority": 11,
+      "timeframe": "Days 30-365",
+      "audience": ["all"],
+      "actions": ["Visit a community center", "Join a language cafe or association", "Save contacts for trusted helpers"]
+    },
+    {
+      "topic": "family_reunification",
+      "title": "Get qualified advice before family reunification steps",
+      "priority": 12,
+      "timeframe": "When relevant",
+      "audience": ["asylum_seeker", "refugee", "migrant", "worker"],
+      "actions": ["Check eligibility with a legal advisor", "Collect identity and family documents", "Do not miss appeal or application deadlines"]
+    },
+    {
+      "topic": "digital_tools",
+      "title": "Install useful Swiss apps",
+      "priority": 13,
+      "timeframe": "Days 1-30",
+      "audience": ["all"],
+      "actions": ["Install SBB Mobile", "Install MeteoSwiss", "Use a trusted translation app for first reading only"]
+    },
+    {
+      "topic": "appointments",
+      "title": "Manage appointments and documents",
+      "priority": 14,
+      "timeframe": "Ongoing",
+      "audience": ["all"],
+      "actions": ["Use a calendar with reminders", "Bring ID and letters to appointments", "Ask for an interpreter if needed"]
+    },
+    {
+      "topic": "letters_documents",
+      "title": "Understand every official letter before acting",
+      "priority": 15,
+      "timeframe": "Ongoing",
+      "audience": ["all"],
+      "actions": ["Check sender, date, deadline, and requested action", "Use Letter Helper for a first explanation", "Confirm with a trusted service for legal matters"]
+    },
+    {
+      "topic": "leisure",
+      "title": "Explore low-cost places and routines",
+      "priority": 16,
+      "timeframe": "Days 30-365",
+      "audience": ["all"],
+      "actions": ["Visit local libraries and parks", "Ask about museum free days", "Find sports or community activities"]
+    }
+  ],
+  "cantons": {
+    "AG": {"name": "Aargau", "languages": ["German"], "integration_office": "Aargau integration services", "services": [], "sources": []},
+    "AI": {"name": "Appenzell Innerrhoden", "languages": ["German"], "integration_office": "Appenzell Innerrhoden migration services", "services": [], "sources": []},
+    "AR": {"name": "Appenzell Ausserrhoden", "languages": ["German"], "integration_office": "Appenzell Ausserrhoden integration services", "services": [], "sources": []},
+    "BE": {"name": "Bern", "languages": ["German", "French"], "integration_office": "Canton Bern integration office", "services": [], "sources": []},
+    "BL": {"name": "Basel-Landschaft", "languages": ["German"], "integration_office": "Basel-Landschaft integration office", "services": [], "sources": []},
+    "BS": {"name": "Basel-Stadt", "languages": ["German"], "integration_office": "Basel-Stadt integration office", "services": [], "sources": []},
+    "FR": {"name": "Fribourg", "languages": ["French", "German"], "integration_office": "Fribourg integration office", "services": [], "sources": []},
+    "GE": {
+      "name": "Geneva",
+      "languages": ["French"],
+      "integration_office": "Bureau de l'intégration et de la citoyenneté",
+      "services": [
+        {"name": "Hospice général", "topics": ["financial_support", "housing", "social_integration"], "description": "Social support and assistance in Geneva.", "contact": "https://www.hospicegeneral.ch"},
+        {"name": "Bureau de l'intégration et de la citoyenneté", "topics": ["language_learning", "social_integration", "legal_permits"], "description": "Integration information and orientation.", "contact": "https://www.ge.ch"},
+        {"name": "HUG Geneva hospitals", "topics": ["healthcare", "mental_health"], "description": "Public hospital and health services.", "contact": "https://www.hug.ch"}
+      ],
+      "sources": [
+        {"title": "Canton Geneva official portal", "url": "https://www.ge.ch", "description": "Official canton services and procedures."},
+        {"title": "ch.ch foreigners in Switzerland", "url": "https://www.ch.ch/en/foreign-nationals-in-switzerland/", "description": "Federal information for foreign nationals."}
+      ]
+    },
+    "GL": {"name": "Glarus", "languages": ["German"], "integration_office": "Glarus migration services", "services": [], "sources": []},
+    "GR": {"name": "Graubünden", "languages": ["German", "Romansh", "Italian"], "integration_office": "Graubünden integration office", "services": [], "sources": []},
+    "JU": {"name": "Jura", "languages": ["French"], "integration_office": "Jura integration services", "services": [], "sources": []},
+    "LU": {"name": "Lucerne", "languages": ["German"], "integration_office": "Lucerne integration office", "services": [], "sources": []},
+    "NE": {"name": "Neuchâtel", "languages": ["French"], "integration_office": "Neuchâtel integration office", "services": [], "sources": []},
+    "NW": {"name": "Nidwalden", "languages": ["German"], "integration_office": "Nidwalden migration services", "services": [], "sources": []},
+    "OW": {"name": "Obwalden", "languages": ["German"], "integration_office": "Obwalden migration services", "services": [], "sources": []},
+    "SG": {"name": "St. Gallen", "languages": ["German"], "integration_office": "St. Gallen integration office", "services": [], "sources": []},
+    "SH": {"name": "Schaffhausen", "languages": ["German"], "integration_office": "Schaffhausen integration office", "services": [], "sources": []},
+    "SO": {"name": "Solothurn", "languages": ["German"], "integration_office": "Solothurn integration office", "services": [], "sources": []},
+    "SZ": {"name": "Schwyz", "languages": ["German"], "integration_office": "Schwyz migration services", "services": [], "sources": []},
+    "TG": {"name": "Thurgau", "languages": ["German"], "integration_office": "Thurgau integration office", "services": [], "sources": []},
+    "TI": {"name": "Ticino", "languages": ["Italian"], "integration_office": "Ticino integration office", "services": [], "sources": []},
+    "UR": {"name": "Uri", "languages": ["German"], "integration_office": "Uri migration services", "services": [], "sources": []},
+    "VD": {
+      "name": "Vaud",
+      "languages": ["French"],
+      "integration_office": "Bureau cantonal pour l'intégration des étrangers",
+      "services": [
+        {"name": "EVAM", "topics": ["asylum", "housing", "financial_support"], "description": "Support for asylum seekers in Vaud.", "contact": "https://www.evam.ch"},
+        {"name": "Bureau cantonal pour l'intégration", "topics": ["language_learning", "social_integration"], "description": "Integration information and supported language courses.", "contact": "https://www.vd.ch"},
+        {"name": "Unisanté", "topics": ["healthcare", "mental_health"], "description": "Public health and prevention services.", "contact": "https://www.unisante.ch"}
+      ],
+      "sources": [
+        {"title": "Canton Vaud official portal", "url": "https://www.vd.ch", "description": "Official canton procedures and services."},
+        {"title": "ch.ch foreigners in Switzerland", "url": "https://www.ch.ch/en/foreign-nationals-in-switzerland/", "description": "Federal information for foreign nationals."}
+      ]
+    },
+    "VS": {"name": "Valais", "languages": ["French", "German"], "integration_office": "Valais integration office", "services": [], "sources": []},
+    "ZG": {"name": "Zug", "languages": ["German"], "integration_office": "Zug integration office", "services": [], "sources": []},
+    "ZH": {
+      "name": "Zürich",
+      "languages": ["German"],
+      "integration_office": "Kantonale Fachstelle Integration Zürich",
+      "services": [
+        {"name": "AOZ", "topics": ["asylum", "housing", "language_learning", "social_integration"], "description": "Integration, asylum, social support, and German courses in Zürich.", "contact": "https://www.aoz.ch"},
+        {"name": "Kantonale Fachstelle Integration", "topics": ["language_learning", "employment", "social_integration"], "description": "Cantonal integration information and programs.", "contact": "https://www.zh.ch"},
+        {"name": "Migrationsamt Zürich", "topics": ["legal_permits", "registration_admin"], "description": "Residence permits and migration procedures.", "contact": "https://www.zh.ch"}
+      ],
+      "sources": [
+        {"title": "Canton Zürich official portal", "url": "https://www.zh.ch", "description": "Official canton information and services."},
+        {"title": "ch.ch foreigners in Switzerland", "url": "https://www.ch.ch/en/foreign-nationals-in-switzerland/", "description": "Federal information for foreign nationals."}
+      ]
+    }
+  }
+}
