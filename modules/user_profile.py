@@ -1,7 +1,7 @@
 import streamlit as st
 
 from services.storage_service import save_profile
-from ui.components import render_page_hero, render_profile_chip
+from ui.components import render_page_hero, render_profile_badge
 from utils.constants import SWISS_CANTONS, USER_TYPES
 from utils.translations import t
 
@@ -30,7 +30,6 @@ def render_profile_gate(update_mode: bool = False) -> None:
     )
     code = canton.split("(")[-1].replace(")", "")
     name = canton.rsplit("(", 1)[0].strip()
-    render_profile_chip(name, code, st.session_state.get("user_type", "migrant"))
 
     user_type = st.selectbox(
         t("select_user_type"),
@@ -38,6 +37,7 @@ def render_profile_gate(update_mode: bool = False) -> None:
         format_func=lambda value: t(value),
         index=USER_TYPES.index(st.session_state.get("user_type", "migrant")),
     )
+    render_profile_badge(name, code, user_type)
 
     if st.button(t("save_profile"), use_container_width=True):
         st.session_state["canton_code"] = code
@@ -57,8 +57,8 @@ def render_profile_gate(update_mode: bool = False) -> None:
 def render_profile_summary(compact: bool) -> None:
     profile = _current_profile()
     if compact:
-        render_profile_chip(profile["canton_name"], profile["canton_code"], profile["user_type"])
+        render_profile_badge(profile["canton_name"], profile["canton_code"], profile["user_type"])
     else:
         st.markdown("<div class='soft-card'>", unsafe_allow_html=True)
-        render_profile_chip(profile["canton_name"], profile["canton_code"], profile["user_type"])
+        render_profile_badge(profile["canton_name"], profile["canton_code"], profile["user_type"])
         st.markdown("</div>", unsafe_allow_html=True)

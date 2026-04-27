@@ -50,19 +50,23 @@ def render_page_hero(title: str, copy: str, eyebrow: str | None = None, canton_c
     )
 
 
-def render_profile_chip(canton_name: str, canton_code: str, user_type: str) -> None:
+def render_profile_badge(canton_name: str, canton_code: str, user_type: str) -> None:
     flag = flag_img(canton_flag_uri(canton_code), f"{canton_name} flag", 30)
     st.markdown(
         f"""
-        <div class="profile-chip">
-            {flag}
-            <span>{canton_name} ({canton_code})</span>
-            <span>•</span>
-            <span>{t(user_type)}</span>
+        <div class="profile-badge">
+            <span class="profile-badge__flag">{flag}</span>
+            <span class="profile-badge__place">{canton_name} ({canton_code})</span>
+            <span class="profile-badge__dot">&bull;</span>
+            <span class="profile-badge__type">{t(user_type)}</span>
         </div>
         """,
         unsafe_allow_html=True,
     )
+
+
+def render_profile_chip(canton_name: str, canton_code: str, user_type: str) -> None:
+    render_profile_badge(canton_name, canton_code, user_type)
 
 
 def render_service_shell(icon: str, title: str, description: str) -> None:

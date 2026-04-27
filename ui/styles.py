@@ -477,16 +477,61 @@ def load_custom_css() -> None:
             min-height: 72px;
         }
 
+        .profile-badge,
         .profile-chip {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 9px;
             border-radius: 999px;
-            background: rgba(255,255,255,.72);
-            border: 1px solid var(--line);
-            padding: 8px 12px;
-            font-weight: 800;
+            background:
+                linear-gradient(145deg, rgba(255,255,255,.92), rgba(248,250,252,.76));
+            border: 1px solid rgba(148,163,184,.26);
+            padding: 8px 13px 8px 9px;
+            font-weight: 850;
             color: var(--ink);
+            box-shadow:
+                0 12px 30px rgba(6,27,61,.07),
+                inset 0 1px 0 rgba(255,255,255,.72);
+            line-height: 1;
+            max-width: 100%;
+        }
+
+        .profile-badge__flag {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 11px;
+            background: white;
+            border: 1px solid rgba(148,163,184,.18);
+            box-shadow: 0 8px 18px rgba(6,27,61,.10);
+            flex: 0 0 34px;
+        }
+
+        .flag-img {
+            display: block;
+            border-radius: 9px;
+            object-fit: contain;
+            background: white;
+        }
+
+        .profile-badge__place {
+            color: var(--navy);
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .profile-badge__dot {
+            color: rgba(100,116,139,.70);
+            font-weight: 900;
+        }
+
+        .profile-badge__type {
+            color: #475569;
+            font-weight: 800;
+            white-space: nowrap;
         }
 
         .center-shell {

@@ -1,7 +1,7 @@
 import base64
 from pathlib import Path
 
-from utils.constants import SWISS_CANTONS
+from ui.cantons import canton_asset_path, canton_metadata, canton_remote_uri
 
 
 ASSET_DIR = Path(__file__).resolve().parents[1] / "assets" / "flags"
@@ -52,10 +52,14 @@ def swiss_flag_uri() -> str:
 
 def canton_flag_uri(code: str) -> str:
     normalized = code.lower()
-    canton = next((item for item in SWISS_CANTONS if item["code"].lower() == normalized), None)
-    name = canton["name"] if canton else code.upper()
-    return _file_data_uri(CANTON_DIR / f"{normalized}.svg") or _svg_data_uri(_placeholder_canton_svg(code, name))
+    metadata = canton_metadata(code)
+    return (
+        _file_data_uri(canton_asset_path(code))
+        or _file_data_uri(CANTON_DIR / f"{normalized}.svg")
+        or canton_remote_uri(code)
+        or _svg_data_uri(_placeholder_canton_svg(code, metadata["name"]))
+    )
 
 
 def flag_img(uri: str, alt: str, size: int = 34) -> str:
-    return f"<img src='{uri}' alt='{alt}' style='width:{size}px;height:{size}px;border-radius:10px;object-fit:cover;box-shadow:0 8px 18px rgba(15,23,42,.12);' />"
+    return f"<img src='{uri}' alt='{alt}' class='flag-img' style='width:{size}px;height:{size}px;' />"
