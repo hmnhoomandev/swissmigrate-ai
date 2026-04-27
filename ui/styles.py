@@ -29,9 +29,8 @@ def load_custom_css() -> None:
         .stApp {
             color: var(--ink);
             background:
-                radial-gradient(circle at 12% 8%, rgba(220,38,38,.12), transparent 28%),
-                radial-gradient(circle at 88% 3%, rgba(15,118,110,.13), transparent 28%),
-                linear-gradient(135deg, #fffaf4 0%, #f8fbff 45%, #f2f7f5 100%);
+                linear-gradient(118deg, rgba(255,241,242,.92) 0%, rgba(255,250,244,.90) 32%, rgba(238,251,246,.92) 68%, rgba(248,251,255,.96) 100%),
+                linear-gradient(180deg, #fffaf4 0%, #f8fbff 100%);
         }
 
         .main .block-container {
@@ -59,17 +58,98 @@ def load_custom_css() -> None:
             margin-bottom: 12px;
         }
 
-        .brand-mark {
+        .brand-logo {
+            position: relative;
             width: 48px;
             height: 48px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, var(--swiss-red), var(--deep-red));
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            box-shadow: 0 14px 30px rgba(220,38,38,.28);
+            flex: 0 0 48px;
+            overflow: hidden;
+            border-radius: 15px;
+            background:
+                linear-gradient(145deg, #fffbf7 0%, #ffe8e6 42%, #dff8ec 100%);
+            border: 1px solid rgba(255,255,255,.82);
+            box-shadow:
+                0 16px 34px rgba(153,27,27,.16),
+                inset 0 1px 0 rgba(255,255,255,.92);
+        }
+
+        .brand-logo__cross,
+        .brand-logo__path,
+        .brand-logo__node {
+            position: absolute;
+            display: block;
+        }
+
+        .brand-logo__cross {
+            left: 11px;
+            top: 11px;
+            width: 15px;
+            height: 15px;
+        }
+
+        .brand-logo__cross:before,
+        .brand-logo__cross:after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            background: var(--swiss-red);
+        }
+
+        .brand-logo__cross:before {
+            left: 6px;
+            top: 0;
+            width: 4px;
+            height: 15px;
+        }
+
+        .brand-logo__cross:after {
+            left: 0;
+            top: 6px;
+            width: 15px;
+            height: 4px;
+        }
+
+        .brand-logo__path {
+            left: 16px;
+            bottom: 12px;
+            width: 24px;
+            height: 18px;
+            border-right: 4px solid var(--lake);
+            border-bottom: 4px solid var(--lake);
+            border-radius: 0 0 14px 0;
+            transform: skewX(-12deg);
+        }
+
+        .brand-logo__path:after {
+            content: "";
+            position: absolute;
+            right: -7px;
+            top: -6px;
+            width: 9px;
+            height: 9px;
+            border-top: 4px solid var(--lake);
+            border-right: 4px solid var(--lake);
+            transform: rotate(45deg);
+            border-radius: 2px;
+        }
+
+        .brand-logo__node {
+            right: 11px;
+            top: 12px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--ink);
+            box-shadow:
+                -8px 18px 0 -1px rgba(23,32,51,.80),
+                0 18px 0 -1px rgba(220,38,38,.80);
+        }
+
+        .brand-row--compact .brand-logo {
+            width: 40px;
+            height: 40px;
+            flex-basis: 40px;
+            border-radius: 13px;
         }
 
         .brand-title {
@@ -86,8 +166,8 @@ def load_custom_css() -> None:
 
         .language-gate {
             position: relative;
-            max-width: 1040px;
-            margin: 3.5vh auto 0;
+            max-width: 1120px;
+            margin: 2.2vh auto 0;
             padding: 0 18px 44px;
             animation: fadeUp .55s ease both;
         }
@@ -105,14 +185,14 @@ def load_custom_css() -> None:
             position: relative;
             overflow: hidden;
             text-align: center;
-            border-radius: 32px;
-            padding: 46px 42px 42px;
+            border-radius: 34px;
+            padding: 54px 48px 48px;
             border: 1px solid rgba(255,255,255,.74);
             background:
-                linear-gradient(135deg, rgba(255,255,255,.94), rgba(255,241,242,.90) 42%, rgba(223,248,236,.88)),
-                radial-gradient(circle at 18% 18%, rgba(246,184,75,.18), transparent 32%);
+                linear-gradient(135deg, rgba(255,255,255,.96), rgba(255,243,238,.94) 44%, rgba(230,249,240,.92)),
+                repeating-linear-gradient(135deg, rgba(255,255,255,.32) 0, rgba(255,255,255,.32) 1px, transparent 1px, transparent 18px);
             box-shadow:
-                0 28px 80px rgba(15,23,42,.12),
+                0 34px 90px rgba(15,23,42,.13),
                 inset 0 1px 0 rgba(255,255,255,.72);
             isolation: isolate;
         }
@@ -130,14 +210,14 @@ def load_custom_css() -> None:
         .language-hero:after {
             content: "";
             position: absolute;
-            width: 340px;
-            height: 340px;
-            right: -130px;
-            top: -145px;
-            border-radius: 50%;
-            background: conic-gradient(from 25deg, rgba(220,38,38,.24), rgba(246,184,75,.20), rgba(15,118,110,.18), rgba(220,38,38,.24));
-            filter: blur(.2px);
-            opacity: .85;
+            width: 420px;
+            height: 120px;
+            right: -110px;
+            top: 34px;
+            border-radius: 32px;
+            background: linear-gradient(90deg, rgba(220,38,38,.14), rgba(246,184,75,.16), rgba(15,118,110,.14));
+            transform: rotate(-16deg);
+            opacity: .9;
             z-index: -1;
         }
 
@@ -145,43 +225,74 @@ def load_custom_css() -> None:
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 8px 14px;
+            padding: 9px 15px;
             border-radius: 999px;
             background: rgba(255,255,255,.68);
             border: 1px solid rgba(220,38,38,.12);
             color: var(--deep-red);
-            font-size: .78rem;
+            font-size: .8rem;
             font-weight: 850;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
             box-shadow: 0 10px 28px rgba(15,23,42,.06);
         }
 
         .language-hero__title {
             margin: 0 auto;
             color: var(--ink);
-            font-size: clamp(2.15rem, 3.8vw, 3.55rem);
+            font-size: 4.45rem;
             line-height: 1.02;
             font-weight: 900;
             white-space: nowrap;
+            max-width: 980px;
         }
 
         .language-hero__copy {
-            max-width: 720px;
-            margin: 18px auto 0;
+            max-width: 820px;
+            margin: 20px auto 0;
             color: #526174;
-            font-size: 1.08rem;
-            line-height: 1.72;
+            font-size: 1.12rem;
+            line-height: 1.65;
+        }
+
+        .language-benefits {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        .language-benefits span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 13px;
+            border-radius: 999px;
+            color: #334155;
+            background: rgba(255,255,255,.68);
+            border: 1px solid rgba(148,163,184,.18);
+            font-size: .88rem;
+            font-weight: 800;
+            box-shadow: 0 10px 26px rgba(15,23,42,.055);
+        }
+
+        .language-benefits span:before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, var(--swiss-red), var(--lake));
         }
 
         .language-selector-card {
-            max-width: 900px;
-            margin: -18px auto 0;
-            padding: 26px;
-            border-radius: 28px;
+            max-width: 930px;
+            margin: -20px auto 0;
+            padding: 24px;
+            border-radius: 30px;
             border: 1px solid rgba(255,255,255,.78);
-            background: rgba(255,255,255,.78);
+            background: rgba(255,255,255,.82);
             backdrop-filter: blur(18px);
-            box-shadow: 0 24px 64px rgba(15,23,42,.10);
+            box-shadow: 0 28px 70px rgba(15,23,42,.12);
         }
 
         .language-selector-heading {
@@ -194,7 +305,7 @@ def load_custom_css() -> None:
 
         .language-selector-heading span {
             color: var(--ink);
-            font-size: 1rem;
+            font-size: 1.04rem;
             font-weight: 900;
         }
 
@@ -204,26 +315,28 @@ def load_custom_css() -> None:
             font-weight: 650;
         }
 
-        .main div[data-testid="stRadio"] div[role="radiogroup"] {
+        .language-gate div[data-testid="stRadio"] div[role="radiogroup"] {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 14px;
+            gap: 12px;
         }
 
-        .main div[data-testid="stRadio"] div[role="radiogroup"] > label {
-            min-height: 86px;
+        .language-gate div[data-testid="stRadio"] div[role="radiogroup"] > label {
+            position: relative;
+            min-height: 58px;
             margin: 0;
-            padding: 17px 18px;
-            border-radius: 20px;
+            padding: 0 18px;
+            border-radius: 999px;
             border: 1px solid rgba(148,163,184,.24);
             background:
-                linear-gradient(145deg, rgba(255,255,255,.96), rgba(255,250,244,.78));
-            box-shadow: 0 12px 32px rgba(15,23,42,.055);
+                linear-gradient(145deg, rgba(255,255,255,.98), rgba(255,250,244,.76));
+            box-shadow: 0 12px 30px rgba(15,23,42,.052);
             transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
             cursor: pointer;
+            justify-content: center;
         }
 
-        .main div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
+        .language-gate div[data-testid="stRadio"] div[role="radiogroup"] > label:hover {
             transform: translateY(-3px);
             border-color: rgba(220,38,38,.30);
             box-shadow: 0 18px 42px rgba(15,23,42,.10);
@@ -231,35 +344,44 @@ def load_custom_css() -> None:
                 linear-gradient(145deg, rgba(255,255,255,1), rgba(255,241,242,.82));
         }
 
-        .main div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) {
+        .language-gate div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked) {
             border-color: rgba(220,38,38,.62);
             background:
-                linear-gradient(145deg, rgba(255,255,255,.98), rgba(255,241,242,.92) 46%, rgba(223,248,236,.72));
+                linear-gradient(145deg, rgba(255,255,255,.98), rgba(255,241,242,.92) 52%, rgba(223,248,236,.78));
             box-shadow:
                 0 20px 50px rgba(220,38,38,.16),
                 inset 0 0 0 1px rgba(220,38,38,.18);
         }
 
-        .main div[data-testid="stRadio"] div[role="radiogroup"] > label > div:first-child {
+        .language-gate div[data-testid="stRadio"] div[role="radiogroup"] > label:has(input:checked):after {
+            content: "";
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            width: 8px;
+            height: 14px;
+            border-right: 2px solid var(--deep-red);
+            border-bottom: 2px solid var(--deep-red);
+            transform: translateY(-58%) rotate(42deg);
+            border-radius: 1px;
+        }
+
+        .language-gate div[data-testid="stRadio"] div[role="radiogroup"] > label > div:first-child {
             display: none;
         }
 
-        .main div[data-testid="stRadio"] div[role="radiogroup"] > label p {
+        .language-gate div[data-testid="stRadio"] div[role="radiogroup"] > label p {
             color: var(--ink);
-            font-size: 1rem;
+            font-size: 1.02rem;
             font-weight: 850;
-            line-height: 1.3;
+            line-height: 1.2;
             white-space: normal;
-        }
-
-        .main div[data-testid="stRadio"] div[role="radiogroup"] > label p::first-letter {
-            color: var(--deep-red);
         }
 
         .language-action {
             display: flex;
             justify-content: center;
-            margin-top: 24px;
+            margin-top: 26px;
         }
 
         .language-action div.stButton {
@@ -267,11 +389,12 @@ def load_custom_css() -> None:
         }
 
         .language-action div.stButton > button {
-            min-width: 190px;
-            min-height: 50px;
-            padding: 0 30px;
+            min-width: 196px;
+            min-height: 52px;
+            padding: 0 32px;
             border-radius: 999px;
-            font-size: .98rem;
+            font-size: 1rem;
+            background: linear-gradient(135deg, #e11d48, #dc2626 44%, #991b1b);
         }
 
         @keyframes fadeUp {
@@ -481,8 +604,8 @@ def load_custom_css() -> None:
                 font-size: .72rem;
             }
             .language-hero__title {
-                font-size: 2rem;
-                white-space: normal;
+                font-size: 2.1rem;
+                white-space: nowrap;
             }
             .language-hero__copy {
                 font-size: .98rem;
@@ -498,11 +621,11 @@ def load_custom_css() -> None:
                 display: block;
                 margin-top: 4px;
             }
-            .main div[data-testid="stRadio"] div[role="radiogroup"] {
+            .language-gate div[data-testid="stRadio"] div[role="radiogroup"] {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 10px;
             }
-            .main div[data-testid="stRadio"] div[role="radiogroup"] > label {
+            .language-gate div[data-testid="stRadio"] div[role="radiogroup"] > label {
                 min-height: 72px;
                 padding: 14px;
                 border-radius: 17px;

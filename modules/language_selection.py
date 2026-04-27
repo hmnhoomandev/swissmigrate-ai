@@ -5,15 +5,15 @@ from utils.constants import LANGUAGES
 from utils.translations import t
 
 
-LANGUAGE_ACCENTS = {
-    "Persian": "FA",
-    "Arabic": "AR",
-    "Turkish": "TR",
-    "Ukrainian": "UK",
-    "Chinese": "ZH",
-    "English": "EN",
-    "Spanish": "ES",
-    "French": "FR",
+LANGUAGE_DISPLAY = {
+    "Persian": "فارسی",
+    "Arabic": "العربية",
+    "Turkish": "Türkçe",
+    "Ukrainian": "Українська",
+    "Chinese": "中文",
+    "English": "English",
+    "Spanish": "Español",
+    "French": "Français",
 }
 
 
@@ -23,12 +23,17 @@ def render_language_gate() -> None:
     st.markdown(
         """
         <section class="language-hero">
-            <div class="language-hero__badge">Private, practical support for life in Switzerland</div>
-            <h1 class="language-hero__title">Choose the language that feels like home.</h1>
+            <div class="language-hero__badge">Your AI guide for life in Switzerland</div>
+            <h1 class="language-hero__title">Settle in Switzerland.</h1>
             <p class="language-hero__copy">
-                We will shape every screen and AI answer around the language you choose,
-                so the next step feels calmer and easier to understand.
+                Understand official letters, local services, healthcare, housing, work, and everyday steps
+                with calm guidance in your own language.
             </p>
+            <div class="language-benefits" aria-label="Key benefits">
+                <span>Understand documents</span>
+                <span>Find local next steps</span>
+                <span>Ask safely in your language</span>
+            </div>
         </section>
         """,
         unsafe_allow_html=True,
@@ -41,8 +46,8 @@ def render_language_gate() -> None:
     st.markdown(
         """
         <div class="language-selector-heading">
-            <span>Select your language</span>
-            <small>You can change this later in settings.</small>
+            <span>Choose your language to get started</span>
+            <small>The whole experience will adapt to you.</small>
         </div>
         """,
         unsafe_allow_html=True,
@@ -52,7 +57,7 @@ def render_language_gate() -> None:
         list(options.keys()),
         index=default_index,
         label_visibility="collapsed",
-        format_func=lambda name: f"{LANGUAGE_ACCENTS.get(name, name[:2].upper())}  {name}",
+        format_func=lambda name: LANGUAGE_DISPLAY.get(name, name),
     )
     st.markdown("</section>", unsafe_allow_html=True)
 

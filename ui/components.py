@@ -16,11 +16,15 @@ def set_page(page_key: str) -> None:
 
 
 def render_brand(compact: bool = False) -> None:
-    flag = flag_img(swiss_flag_uri(), "Swiss flag", 36 if compact else 42)
+    size_class = "brand-row--compact" if compact else "brand-row--full"
     st.markdown(
         f"""
-        <div class="brand-row">
-            {flag}
+        <div class="brand-row {size_class}">
+            <div class="brand-logo" aria-hidden="true">
+                <span class="brand-logo__cross"></span>
+                <span class="brand-logo__path"></span>
+                <span class="brand-logo__node"></span>
+            </div>
             <div>
                 <p class="brand-title">{t("app_name")}</p>
                 <p class="brand-caption">{t("app_tagline")}</p>
