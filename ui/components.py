@@ -10,7 +10,7 @@ PAGE_KEYS = ["dashboard", "letter_helper", "first_365", "canton_navigator", "his
 PAGE_ICONS = {
     "dashboard": "⌂",
     "letter_helper": "✉",
-    "first_365": "365",
+    "first_365": "",
     "canton_navigator": "⌖",
     "history": "◴",
     "settings": "⚙",
@@ -18,7 +18,8 @@ PAGE_ICONS = {
 
 
 def page_label(page_key: str) -> str:
-    return f"{PAGE_ICONS.get(page_key, '•')}  {t(page_key)}"
+    icon = PAGE_ICONS.get(page_key, "•")
+    return f"{icon}  {t(page_key)}" if icon else t(page_key)
 
 
 def set_page(page_key: str) -> None:
