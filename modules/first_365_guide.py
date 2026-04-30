@@ -1,9 +1,10 @@
 import streamlit as st
 
 from services.first_365_content_service import load_first_365_content, topic_options
+from services.llm_service import translate_first_365_items
 from services.storage_service import save_interaction
 from ui.components import render_page_hero, render_profile_badge
-from utils.translations import t
+from utils.translations import current_language_name, t
 
 
 def render_first_365_guide() -> None:
@@ -44,19 +45,28 @@ def _render_topic_picker() -> list[str]:
     columns = st.columns(2)
     for index, topic in enumerate(options):
         with columns[index % 2]:
+            topic_id = topic["id"]
             checked = st.checkbox(
-                topic["label"],
-                value=topic["id"] in {"registration_admin", "legal_permits", "healthcare_insurance", "housing"},
-                key=f"first365-topic-{topic['id']}",
-                help=topic["timeframe"],
+                t(f"first365_topic_{topic_id}"),
+                value=topic_id in {"registration_admin", "legal_permits", "healthcare_insurance", "housing"},
+                key=f"first365-topic-{topic_id}",
+                help=t(f"first365_timeframe_{topic_id}"),
             )
             if checked:
-                selected_topics.append(topic["id"])
+                selected_topics.append(topic_id)
     return selected_topics
 
 
 def _render_selected_guidance(profile: dict[str, str], selected_topics: list[str]) -> None:
     items = load_first_365_content(profile["canton_code"], profile["user_type"], selected_topics)
+    language_name = current_language_name()
+    if language_name.lower() != "english":
+        with st.spinner(t("translating_guidance")):
+            translated = translate_first_365_items(items, language_name)
+        if translated.get("service_warning"):
+            st.warning(translated["service_warning"])
+        items = translated.get("items", items)
+
     save_interaction(
         "first_365",
         f"{profile['canton_code']} / {profile['user_type']} / {', '.join(selected_topics)}",

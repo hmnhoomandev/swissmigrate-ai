@@ -40,3 +40,10 @@ Short practical explanation for the selected canton, situation, and topic.
 ```
 
 Keep information short, practical, and source-based. For legal, medical, or financial topics, add official sources and avoid promises or guarantees.
+
+## GitHub folder tracking
+
+Most canton/status/topic folders start without custom content. Empty folders are
+not tracked by Git, so each folder contains a `.gitkeep` file. Leave these files
+in place. They do not affect the app; they only make sure the folder structure is
+uploaded to GitHub.

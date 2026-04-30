@@ -199,6 +199,32 @@ def personalize_guide(profile: dict[str, str], checklist: list[dict[str, Any]], 
     return _json_chat(system, user, fallback)
 
 
+def translate_first_365_items(items: list[dict[str, Any]], language_name: str) -> dict[str, Any]:
+    if language_name.lower() == "english":
+        return {"items": items}
+    if _client() is None:
+        return {
+            "items": items,
+            "service_warning": "AI translation is unavailable because OPENAI_API_KEY is not configured; showing English content.",
+        }
+
+    fallback = {"items": items}
+    system = (
+        f"Translate first-year settlement guidance into {language_name}. "
+        "Translate only user-facing human-readable text. "
+        "Preserve the JSON structure exactly. "
+        "Do not translate URLs, source_file paths, topic ids, contact URLs, or numeric priorities. "
+        "Keep services and sources as objects with the same keys. "
+        "Keep the content practical, clear, and non-alarming. "
+        "Return only valid JSON with one key: items."
+    )
+    user = json.dumps({"items": items}, ensure_ascii=False)
+    result = _json_chat(system, user, fallback)
+    if not isinstance(result.get("items"), list):
+        return fallback
+    return result
+
+
 def answer_with_context(question: str, profile: dict[str, str], contexts: list[dict[str, Any]], language_name: str) -> dict[str, Any]:
     fallback = {
         "answer": "I found limited trusted context. Please contact your canton integration office or a qualified advisor for confirmation.",
