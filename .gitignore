@@ -3,4 +3,6 @@ __pycache__/
 *.pyc
 .streamlit/secrets.toml
 storage/*.csv
+storage/*.db
+storage/*.db-journal
 !.gitkeep

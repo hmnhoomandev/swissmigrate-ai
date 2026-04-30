@@ -5,7 +5,7 @@ from modules.first_365_guide import render_first_365_guide
 from modules.language_selection import render_language_gate
 from modules.letter_helper import render_letter_helper
 from modules.user_profile import render_profile_gate, render_profile_summary
-from services.storage_service import get_recent_interactions
+from services.storage_service import ensure_user_id, get_letter_history, get_recent_interactions
 from ui.components import PAGE_KEYS, page_label, render_brand, render_page_hero, render_service_shell, set_page
 from ui.styles import load_custom_css
 from utils.translations import t
@@ -34,6 +34,7 @@ if "nav_page" not in st.session_state:
 with st.sidebar:
     render_brand(compact=True)
     st.divider()
+    st.markdown("<div class='sidebar-section-label'>Explore</div>", unsafe_allow_html=True)
     selected_page = st.radio(
         t("navigation"),
         PAGE_KEYS,
@@ -45,6 +46,7 @@ with st.sidebar:
         set_page(selected_page)
         st.rerun()
     st.divider()
+    st.markdown("<div class='sidebar-section-label'>Profile</div>", unsafe_allow_html=True)
     render_profile_summary(compact=True)
 
 page = st.session_state["nav_page"]
@@ -87,14 +89,42 @@ elif page == "canton_navigator":
 
 elif page == "history":
     render_page_hero(t("history"), t("history_intro"), t("history"), st.session_state["canton_code"])
-    rows = get_recent_interactions(limit=20)
-    if not rows:
+    user_id = ensure_user_id(st.session_state)
+    letter_rows = get_letter_history(user_id=user_id, limit=20)
+    interaction_rows = get_recent_interactions(limit=10)
+    if not letter_rows and not interaction_rows:
         st.info(t("no_history"))
     else:
-        for row in rows:
-            with st.expander(f"{row.get('created_at', '')} - {row.get('module', '')}"):
-                st.write(row.get("summary", ""))
-                st.caption(row.get("metadata", ""))
+        if letter_rows:
+            st.subheader("Letter analyses")
+            for row in letter_rows:
+                summary = row.get("summary", {})
+                urgency = row.get("urgency", {})
+                label = summary.get("topic") or summary.get("summary") or "Letter analysis"
+                with st.expander(f"{row.get('timestamp', '')} - {label}"):
+                    st.markdown(f"**Urgency:** {urgency.get('level', '')} ({urgency.get('days_left', '')} days left)")
+                    st.markdown("**Summary**")
+                    st.json(summary)
+                    st.markdown("**Action steps**")
+                    for item in row.get("action_steps", []):
+                        st.checkbox(str(item), value=False, key=f"history-action-{row.get('id')}-{hash(str(item))}")
+                    with st.expander("Translation"):
+                        st.text_area(
+                            "Saved full translation",
+                            row.get("translation", ""),
+                            height=360,
+                            label_visibility="collapsed",
+                            key=f"history-translation-{row.get('id')}",
+                        )
+                    with st.expander(t("masked_text")):
+                        st.code(row.get("masked_input", "")[:12000])
+
+        if interaction_rows:
+            st.subheader("Other saved guidance")
+            for row in interaction_rows:
+                with st.expander(f"{row.get('created_at', '')} - {row.get('module', '')}"):
+                    st.write(row.get("summary", ""))
+                    st.caption(row.get("metadata", ""))
 
 elif page == "settings":
     render_page_hero(t("settings"), t("settings_intro"), t("settings"), st.session_state["canton_code"])

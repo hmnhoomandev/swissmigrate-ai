@@ -42,11 +42,10 @@ SWISS_CANTONS = [
 
 USER_TYPES = ["asylum_seeker", "refugee", "migrant", "worker", "student"]
 
-FIRST_365_TOPICS = [
-    "registration_admin",
-    "legal_permits",
-    "healthcare",
+FIRST_365_GUIDE_TOPICS = [
+    "healthcare_insurance",
     "housing",
+    "legal_permits",
     "employment",
     "education",
     "language_learning",
@@ -54,8 +53,12 @@ FIRST_365_TOPICS = [
     "public_transport",
     "social_integration",
     "mental_health",
+    "registration_admin",
     "family_reunification",
     "digital_tools",
+]
+
+FIRST_365_TOPICS = FIRST_365_GUIDE_TOPICS + [
     "appointments",
     "letters_documents",
     "leisure",

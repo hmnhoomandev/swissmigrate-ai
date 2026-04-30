@@ -1,0 +1,4 @@
+[server]
+# Streamlit requires a numeric upload limit in MB. This removes the app's 10 MB cap
+# and raises the framework ceiling high enough for practical document uploads.
+maxUploadSize = 10240

@@ -1,9 +1,12 @@
 import json
+import re
+from datetime import datetime
 from typing import Any
 
 from openai import OpenAI
 
 from config import OPENAI_API_KEY, OPENAI_MODEL
+from services.security_service import mask_pii
 
 
 def _client() -> OpenAI | None:
@@ -16,6 +19,7 @@ def _json_chat(system: str, user: str, fallback: dict[str, Any]) -> dict[str, An
     client = _client()
     if client is None:
         return fallback
+    safe_user = mask_pii(user).masked_text
 
     try:
         response = client.chat.completions.create(
@@ -24,7 +28,7 @@ def _json_chat(system: str, user: str, fallback: dict[str, Any]) -> dict[str, An
             response_format={"type": "json_object"},
             messages=[
                 {"role": "system", "content": system},
-                {"role": "user", "content": user},
+                {"role": "user", "content": safe_user},
             ],
         )
         return json.loads(response.choices[0].message.content or "{}")
@@ -35,24 +39,152 @@ def _json_chat(system: str, user: str, fallback: dict[str, Any]) -> dict[str, An
 
 def analyze_letter(masked_text: str, language_name: str) -> dict[str, Any]:
     fallback = {
-        "simple_explanation": "The uploaded letter appears to ask you to check instructions, deadlines, and required documents.",
-        "urgency": "Medium",
-        "deadline": "No exact deadline detected by the fallback analyzer.",
-        "actions": [
+        "summary": {
+            "topic": "Not specified in the letter",
+            "sender": "Not specified in the letter",
+            "date": "Not specified in the letter",
+            "recipient": "Not specified in the letter",
+            "summary": "The letter could not be analyzed by the AI service. Please review the masked text and try again.",
+        },
+        "urgency": {
+            "level": "No clear deadline found",
+            "days_left": "Not specified in the letter",
+        },
+        "translation": masked_text,
+        "action_steps": [
             "Read the letter date and any deadline carefully.",
             "Prepare documents mentioned in the letter.",
             "Contact the office or a trusted advisor if anything is unclear.",
         ],
-        "suggested_reply": "Dear Sir or Madam,\n\nI confirm that I received your letter. I will review the requested steps and provide the necessary documents as soon as possible.\n\nKind regards",
-        "confidence": "low",
     }
+    today = datetime.now().date().isoformat()
     system = (
         "You help migrants in Switzerland understand official letters. "
-        "Use simple, calm language. Never give definitive legal advice. "
-        f"Return only valid JSON in {language_name}. Keys: simple_explanation, urgency, deadline, actions, suggested_reply, confidence."
+        "You must use only the information present in the masked text. "
+        "Never guess missing information, never infer hidden personal data from masked tokens, and never hallucinate. "
+        "If a field is missing, write exactly: Not specified in the letter. "
+        "Keep redacted privacy values such as [NAME:Ho...an], [EMAIL:jo...@ex...le.com], [PHONE:+41 79 ... 67], [ADDRESS:Ma...et 12], and [ID:AB...12] unchanged. "
+        f"Today is {today}. Calculate days_left from any explicit deadline in the letter. "
+        "Urgency rules: 0-1 days = VERY URGENT, 2-3 days = URGENT, 3-5 days = MEDIUM, 5+ days = LOW. "
+        "If no clear deadline exists, urgency.level must be No clear deadline found and urgency.days_left must be Not specified in the letter. "
+        f"Create a short translation field in {language_name}; the app will produce the full line-by-line translation separately. "
+        "Return only valid JSON with this exact structure: "
+        '{"summary":{"topic":"","sender":"","date":"","recipient":"","summary":""},'
+        '"urgency":{"level":"","days_left":""},"translation":"","action_steps":[]}.'
     )
-    user = f"Analyze this masked official letter:\n\n{masked_text[:12000]}"
-    return _json_chat(system, user, fallback)
+    user = f"Analyze this masked official letter:\n\n{masked_text[:16000]}"
+    result = _json_chat(system, user, fallback)
+    normalized = _normalize_letter_result(result, fallback)
+    normalized["translation"] = translate_full_text(masked_text, language_name)
+    return normalized
+
+
+def translate_full_text(masked_text: str, language_name: str) -> str:
+    fallback = {"translation": masked_text}
+    system = (
+        f"Translate the complete masked document into {language_name}. "
+        "This is a full-document translation task, not a summary task. "
+        "Preserve every visible line, ticket block, date, time, route, price, order number, reference number, and note. "
+        "Do not omit repeated sections. Do not combine several tickets into one sentence. "
+        "Keep line breaks and the original order as much as possible. "
+        "Translate all human-readable words that are not already in the target language. "
+        "If a line is already in the target language, copy it or lightly normalize it without deleting it. "
+        "Keep proper nouns, station names, product codes, numbers, dates, times, and currency values unchanged. "
+        "Keep redacted privacy values in square brackets exactly as written, for example [NAME:Ho...an]. "
+        "Never guess missing or hidden characters. "
+        "Return only valid JSON with one key: translation."
+    )
+    user = f"Translate this full masked document line by line:\n\n{masked_text[:20000]}"
+    result = _json_chat(system, user, fallback)
+    if result.get("service_warning"):
+        return "Translation service unavailable; showing the extracted masked text instead.\n\n" + masked_text
+    translation = result.get("translation")
+    if isinstance(translation, str) and _looks_complete_translation(masked_text, translation):
+        return translation.strip()
+
+    retry_system = (
+        f"Your previous output was incomplete. Translate the entire masked document into {language_name}. "
+        "Output every ticket/block and every meaningful source line. Do not summarize. "
+        "Keep station names, cities, dates, times, prices, product names, and all bracketed redactions unchanged. "
+        "Return only valid JSON with one key: translation."
+    )
+    retry_user = (
+        "Translate the complete document. Keep approximately the same structure and number of blocks:\n\n"
+        f"{masked_text[:20000]}"
+    )
+    retry = _json_chat(retry_system, retry_user, fallback)
+    retry_translation = retry.get("translation")
+    if isinstance(retry_translation, str) and _looks_complete_translation(masked_text, retry_translation):
+        return retry_translation.strip()
+
+    return "Full translation was incomplete; showing the full extracted masked text instead.\n\n" + masked_text
+
+
+def _looks_complete_translation(source: str, translation: str) -> bool:
+    source_lines = [line for line in source.splitlines() if line.strip()]
+    translated_lines = [line for line in translation.splitlines() if line.strip()]
+    if not translation.strip():
+        return False
+    if len(source) > 1200 and len(translation) < len(source) * 0.45:
+        return False
+    if len(source_lines) > 20 and len(translated_lines) < len(source_lines) * 0.35:
+        return False
+    return True
+
+
+def _normalize_letter_result(result: dict[str, Any], fallback: dict[str, Any]) -> dict[str, Any]:
+    normalized = {
+        "summary": {**fallback["summary"], **(result.get("summary") if isinstance(result.get("summary"), dict) else {})},
+        "urgency": {**fallback["urgency"], **(result.get("urgency") if isinstance(result.get("urgency"), dict) else {})},
+        "translation": result.get("translation") if isinstance(result.get("translation"), str) else fallback["translation"],
+        "action_steps": result.get("action_steps") if isinstance(result.get("action_steps"), list) else fallback["action_steps"],
+    }
+    normalized["urgency"] = _normalize_urgency(normalized["urgency"])
+    if result.get("service_warning"):
+        normalized["service_warning"] = result["service_warning"]
+    return normalized
+
+
+def _normalize_urgency(urgency: dict[str, Any]) -> dict[str, Any]:
+    days_value = urgency.get("days_left", "Not specified in the letter")
+    days_left = _parse_days_left(days_value)
+    if days_left is None:
+        return {
+            **urgency,
+            "level": "No clear deadline found",
+            "days_left": "Not specified in the letter",
+        }
+
+    if days_left <= 1:
+        level = "VERY URGENT"
+    elif days_left <= 3:
+        level = "URGENT"
+    elif days_left <= 5:
+        level = "MEDIUM"
+    else:
+        level = "LOW"
+
+    return {**urgency, "level": level, "days_left": str(days_left)}
+
+
+def _parse_days_left(value: Any) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return max(value, 0)
+    if isinstance(value, float):
+        return max(int(value), 0)
+    if not isinstance(value, str):
+        return None
+
+    normalized = value.strip().lower()
+    if not normalized or "not specified" in normalized or "no clear" in normalized or "none" == normalized:
+        return None
+
+    match = re.search(r"-?\d+", normalized)
+    if not match:
+        return None
+    return max(int(match.group(0)), 0)
 
 
 def personalize_guide(profile: dict[str, str], checklist: list[dict[str, Any]], language_name: str) -> dict[str, Any]:

@@ -7,9 +7,18 @@ from utils.translations import t
 
 PAGE_KEYS = ["dashboard", "letter_helper", "first_365", "canton_navigator", "history", "settings"]
 
+PAGE_ICONS = {
+    "dashboard": "⌂",
+    "letter_helper": "✉",
+    "first_365": "365",
+    "canton_navigator": "⌖",
+    "history": "◴",
+    "settings": "⚙",
+}
+
 
 def page_label(page_key: str) -> str:
-    return t(page_key)
+    return f"{PAGE_ICONS.get(page_key, '•')}  {t(page_key)}"
 
 
 def set_page(page_key: str) -> None:
@@ -56,9 +65,10 @@ def render_profile_badge(canton_name: str, canton_code: str, user_type: str) -> 
         f"""
         <div class="profile-badge">
             <span class="profile-badge__flag">{flag}</span>
-            <span class="profile-badge__place">{canton_name} ({canton_code})</span>
-            <span class="profile-badge__dot">&bull;</span>
-            <span class="profile-badge__type">{t(user_type)}</span>
+            <span class="profile-badge__content">
+                <span class="profile-badge__place">{canton_name} ({canton_code})</span>
+                <span class="profile-badge__type">{t(user_type)}</span>
+            </span>
         </div>
         """,
         unsafe_allow_html=True,
@@ -73,6 +83,7 @@ def render_service_shell(icon: str, title: str, description: str) -> None:
     st.markdown(
         f"""
         <div class="service-shell">
+            <div class="service-shell__shine"></div>
             <div class="service-icon">{icon}</div>
             <div class="service-title">{title}</div>
             <div class="service-text">{description}</div>
