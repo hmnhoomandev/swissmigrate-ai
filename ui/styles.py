@@ -680,6 +680,200 @@ def load_custom_css() -> None:
             margin: 14px 0 0;
         }
 
+        .navigator-command-center {
+            border-radius: 28px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,.78);
+            background:
+                linear-gradient(145deg, rgba(255,255,255,.94), rgba(239,245,252,.78));
+            box-shadow:
+                0 22px 58px rgba(15,23,42,.08),
+                inset 0 1px 0 rgba(255,255,255,.84);
+        }
+
+        .navigator-source-meter {
+            min-height: 94px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-radius: 22px;
+            padding: 16px;
+            background:
+                radial-gradient(circle at 100% 0%, rgba(227,6,19,.12), transparent 34%),
+                linear-gradient(145deg, rgba(255,255,255,.92), rgba(255,241,242,.70));
+            border: 1px solid rgba(255,255,255,.78);
+            box-shadow: 0 14px 34px rgba(15,23,42,.055);
+        }
+
+        .navigator-source-meter--quiet {
+            background:
+                radial-gradient(circle at 100% 0%, rgba(14,92,131,.12), transparent 34%),
+                linear-gradient(145deg, rgba(255,255,255,.92), rgba(239,245,252,.76));
+        }
+
+        .navigator-source-meter > span {
+            width: 52px;
+            height: 52px;
+            flex: 0 0 52px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 17px;
+            color: white;
+            font-weight: 900;
+            font-size: 1.08rem;
+            background: linear-gradient(135deg, var(--swiss-red), var(--lake));
+            box-shadow: 0 14px 28px rgba(6,27,61,.14);
+        }
+
+        .navigator-source-meter b {
+            display: block;
+            color: var(--ink);
+            font-size: .98rem;
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+        .navigator-source-meter p {
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: .84rem;
+            line-height: 1.45;
+            font-weight: 650;
+        }
+
+        .navigator-chat-shell {
+            margin-bottom: 20px;
+            padding: 18px;
+            border-radius: 28px;
+            border: 1px solid rgba(255,255,255,.78);
+            background:
+                radial-gradient(circle at 86% 18%, rgba(246,184,75,.14), transparent 28%),
+                linear-gradient(145deg, rgba(255,255,255,.96), rgba(255,250,244,.80));
+            box-shadow:
+                0 20px 54px rgba(15,23,42,.08),
+                inset 0 1px 0 rgba(255,255,255,.84);
+        }
+
+        .navigator-chat-shell div[role="radiogroup"] {
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 6px 0 12px;
+        }
+
+        .navigator-chat-shell label[data-baseweb="radio"] {
+            min-height: 42px;
+            padding: 6px 11px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.68);
+            border: 1px solid rgba(148,163,184,.18);
+            color: #475569;
+            font-size: .84rem;
+            font-weight: 800;
+        }
+
+        .navigator-chat-shell label[data-baseweb="radio"] > div:first-child {
+            display: none;
+        }
+
+        .navigator-chat-shell label[data-baseweb="radio"]:has(input:checked) {
+            color: var(--deep-red);
+            border-color: rgba(227,6,19,.28);
+            background: rgba(255,241,242,.86);
+        }
+
+        .navigator-answer-card,
+        .navigator-service-card,
+        .navigator-source-card {
+            margin: 14px 0;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,.78);
+            background:
+                linear-gradient(145deg, rgba(255,255,255,.95), rgba(248,250,252,.78));
+            box-shadow:
+                0 18px 48px rgba(15,23,42,.075),
+                inset 0 1px 0 rgba(255,255,255,.82);
+        }
+
+        .navigator-answer-card {
+            overflow: hidden;
+        }
+
+        .navigator-answer-card__top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 15px 18px;
+            background:
+                linear-gradient(135deg, rgba(227,6,19,.10), rgba(14,92,131,.10));
+            border-bottom: 1px solid rgba(148,163,184,.16);
+        }
+
+        .navigator-answer-card__top span {
+            padding: 7px 10px;
+            border-radius: 999px;
+            color: white;
+            background: linear-gradient(135deg, var(--swiss-red), var(--deep-red));
+            font-size: .72rem;
+            font-weight: 900;
+        }
+
+        .navigator-answer-card__top b,
+        .navigator-section-title {
+            color: var(--ink);
+            font-weight: 900;
+        }
+
+        .navigator-answer-copy {
+            padding: 20px;
+            color: #334155;
+            line-height: 1.72;
+            font-size: .98rem;
+        }
+
+        .navigator-section-title {
+            margin: 22px 0 8px;
+            font-size: 1.03rem;
+        }
+
+        .navigator-service-card,
+        .navigator-source-card {
+            padding: 16px;
+        }
+
+        .navigator-service-card b,
+        .navigator-source-card b {
+            display: block;
+            color: var(--ink);
+            font-size: .98rem;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        .navigator-service-card p,
+        .navigator-source-card p {
+            margin: 0 0 8px;
+            color: var(--muted);
+            line-height: 1.52;
+            font-size: .9rem;
+        }
+
+        .navigator-service-card small,
+        .navigator-source-card code {
+            display: block;
+            width: fit-content;
+            max-width: 100%;
+            overflow-wrap: anywhere;
+            padding: 7px 9px;
+            border-radius: 10px;
+            color: #475569;
+            background: rgba(241,245,249,.78);
+            border: 1px solid rgba(148,163,184,.16);
+            font-size: .8rem;
+        }
+
         .stat-card {
             min-height: 144px;
             background:

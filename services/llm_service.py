@@ -226,16 +226,12 @@ def translate_first_365_items(items: list[dict[str, Any]], language_name: str) -
 
 
 def answer_with_context(question: str, profile: dict[str, str], contexts: list[dict[str, Any]], language_name: str) -> dict[str, Any]:
-    fallback = {
-        "answer": "I found limited trusted context. Please contact your canton integration office or a qualified advisor for confirmation.",
-        "steps": [],
-        "services": [],
-        "sources": [context.get("source", {}) for context in contexts],
-        "confidence": "low",
-    }
+    fallback = _grounded_navigator_fallback(question, contexts)
     system = (
         "You are a grounded Swiss canton navigator for migrants and refugees. "
-        "Use only the provided context. If context is insufficient, say so. "
+        "Use only the provided retrieved_context. Do not use outside knowledge. "
+        "If the context is insufficient, say exactly what is missing and suggest checking the listed sources. "
+        "Prefer concrete steps that are explicitly supported by the context. "
         f"Return valid JSON in {language_name} with keys: answer, steps, services, sources, confidence."
     )
     user = json.dumps(
@@ -243,3 +239,70 @@ def answer_with_context(question: str, profile: dict[str, str], contexts: list[d
         ensure_ascii=False,
     )
     return _json_chat(system, user, fallback)
+
+
+def _grounded_navigator_fallback(question: str, contexts: list[dict[str, Any]]) -> dict[str, Any]:
+    sources = [_source_from_context(context) for context in contexts if _source_from_context(context)]
+    document_contexts = [context for context in contexts if context.get("kind") == "document" and context.get("content")]
+    services = [
+        {"name": context.get("name", ""), "contact": context.get("contact", ""), "description": context.get("description", "")}
+        for context in contexts
+        if context.get("kind") == "service"
+    ]
+
+    if not document_contexts and not services:
+        return {
+            "answer": (
+                "I could not find enough local source material for this question. "
+                "Please add a Markdown, PDF, Word, or text file to the matching canton/status folder and try again."
+            ),
+            "steps": [],
+            "services": [],
+            "sources": sources,
+            "confidence": "low",
+        }
+
+    snippets = []
+    for context in document_contexts[:3]:
+        snippets.append(f"{context.get('title', 'Source')}: {context.get('content', '').strip()[:650]}")
+
+    answer = "Based only on the available local sources, here is what I found"
+    if question:
+        answer += f" for your question: {question.strip()}"
+    answer += ".\n\n" + "\n\n".join(snippets)
+    if services:
+        answer += "\n\nRelevant local service records are listed below."
+
+    return {
+        "answer": answer.strip(),
+        "steps": _steps_from_contexts(document_contexts),
+        "services": services[:4],
+        "sources": sources,
+        "confidence": "medium" if document_contexts else "low",
+    }
+
+
+def _source_from_context(context: dict[str, Any]) -> dict[str, str]:
+    source = context.get("source")
+    if isinstance(source, dict):
+        return source
+    if context.get("source_file"):
+        return {
+            "title": context.get("title", "Local source"),
+            "url": context["source_file"],
+            "description": context.get("scope", ""),
+        }
+    return {}
+
+
+def _steps_from_contexts(contexts: list[dict[str, Any]]) -> list[str]:
+    steps: list[str] = []
+    for context in contexts:
+        content = context.get("content", "")
+        for line in content.splitlines():
+            cleaned = line.strip().lstrip("-*").strip()
+            if 18 <= len(cleaned) <= 180 and cleaned not in steps:
+                steps.append(cleaned)
+            if len(steps) >= 5:
+                return steps
+    return steps
