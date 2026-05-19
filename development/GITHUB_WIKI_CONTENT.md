@@ -1,503 +1,556 @@
-﻿# SwissMigrate AI
+﻿# SwissMigrate AI — Complete Wiki
 
-> SwissMigrate AI is an AI-powered Swiss migration assistance platform for migrants, asylum seekers, refugees, students, and workers.
-> It helps users understand official letters, analyze migration documents, access canton-specific guidance, organize case files, and receive AI-assisted recommendations.
+> **SwissMigrate AI** is a local-first, secure migration assistance platform designed for migrants, asylum seekers, refugees, students, workers, and NGO staff navigating Swiss administrative processes.
 
 ---
 
 ## Table of Contents
 
-1. [What is SwissMigrate AI](#what-is-swissmigrate-ai)
-2. [Why it exists](#why-it-exists)
-3. [User problems](#user-problems)
-4. [Who this serves](#who-this-serves)
-5. [Product status](#product-status)
-6. [Core product foundations](#core-product-foundations)
-7. [Current implementation](#current-implementation)
-8. [Planned scope](#planned-scope)
-9. [Production vision](#production-vision)
-10. [Architecture](#architecture)
-11. [AI system](#ai-system)
-12. [OCR and document pipeline](#ocr-and-document-pipeline)
-13. [RAG and semantic search](#rag-and-semantic-search)
-14. [Security and privacy](#security-and-privacy)
-15. [Contributor guide](#contributor-guide)
-16. [Developer setup](#developer-setup)
-17. [Roadmap and priorities](#roadmap-and-priorities)
-18. [Technical decisions](#technical-decisions)
-19. [Glossary](#glossary)
+1. [Overview](#overview)
+2. [Product vision](#product-vision)
+3. [MVP scope & architecture](#mvp-scope--architecture)
+4. [Quick start](#quick-start)
+5. [API & data](#api--data)
+6. [AI system](#ai-system)
+7. [Security & privacy](#security--privacy)
+8. [Deployment & infrastructure](#deployment--infrastructure)
+9. [Development workflow](#development-workflow)
+10. [Roadmap](#roadmap)
+11. [User stories (10 core features)](#user-stories-10-core-features)
+12. [Glossary](#glossary)
 
 ---
 
-## What is SwissMigrate AI
+## Overview
 
-SwissMigrate AI is a migration support platform for people navigating Swiss administrative processes.
+### What is SwissMigrate AI
 
-It combines:
-- document intake and OCR
-- automated migration letter analysis
-- canton-specific guidance
-- secure case management
-- multilingual interaction
-- AI-assisted recommendations and future prediction support
+SwissMigrate AI is an open-source, free-during-development migration support platform that helps people navigate complex Swiss migration processes securely, understand official letters, organize case files, and receive AI-assisted recommendations.
 
-This is a product-led platform with a clear transition path from a Streamlit prototype to a production-grade service.
+### Core capabilities
 
----
+- **Document intelligence**: OCR and AI-powered analysis of migration letters and forms
+- **Semantic knowledge retrieval**: Canton-specific guidance grounded in trusted sources
+- **Secure case vault**: Organize and retrieve migration documents with encryption
+- **Deadline management**: Automatic detection and reminders for critical dates
+- **Multilingual support**: Interface and content in multiple languages
+- **Role-based access**: Separate workflows for individuals, NGO staff, and administrators
 
-## Why it exists
+### Design principles
 
-Swiss migration processes are complex, time-sensitive, and language-sensitive.
-Migrants need reliable help with:
-- interpreting official letters from SEM and Swiss authorities
-- understanding canton-specific rules
-- knowing deadlines and required actions
-- storing migration documents securely
-- receiving trustworthy recommendations
-
-SwissMigrate AI exists to reduce that friction by delivering a practical, secure, and explainable support system.
+- **Local-first & free**: Runs entirely locally during MVP; no paid services required
+- **Open source**: Built transparently with community input
+- **Privacy-forward**: Encryption at rest, minimal PII retention, GDPR-ready
+- **Explainable AI**: All recommendations cite sources and show confidence scores
+- **Secure by default**: Authentication, audit logging, and role-based access from day one
 
 ---
 
-## User problems
+## Product vision
 
-| Problem | Why it matters | SwissMigrate AI response |
-|---|---|---|
-| Official letters are hard to read | Users face unknown legal terms and deadlines | Document analysis and AI-assisted summaries |
-| Documents are scattered | Lost evidence causes delays and risk | Secure file vault with metadata and versioning |
-| Migration rules differ by canton | One-size-fits-all advice is wrong | Canton-specific guidance and data retrieval |
-| People use mobile phones more than desktops | Desktop-only experiences fail | Mobile-first UI and PWA roadmap |
-| Sensitive data must be protected | Migration files are highly personal | Encryption, RBAC, GDPR planning |
-| AI answers can hallucinate | Trust is critical in legal contexts | Semantic retrieval, citation, and source grounding |
+### Why this exists
 
----
+Swiss migration processes are complex, time-sensitive, and language-sensitive. Migrants face:
+- Difficult official letters with strict deadlines
+- Canton-specific rules that change frequently
+- Fragmented document management
+- Limited access to trustworthy guidance
+- Language and cultural barriers
 
-## Who this serves
+SwissMigrate AI exists to reduce that friction by delivering practical, secure, and explainable support.
 
-Primary users:
-- migrants and asylum seekers
-- refugees and displaced people
-- international students
-- foreign workers
+### Who it serves
+
+**Primary users:**
+- Migrants, asylum seekers, refugees, and students
+- International workers
 - NGO caseworkers and legal assistants
-- public-sector advisory teams
+- Public-sector advisors and government teams
 
-Secondary users:
-- product managers defining roadmap
-- engineers building secure ML systems
-- partners evaluating the platform for deployment
+**Secondary users:**
+- Product managers and policy makers
+- ML engineers and security researchers
+- Partner organizations and integration partners
 
----
+### Success metrics
 
-## Product status
-
-### Current implementation
-
-The prototype currently provides:
-- Streamlit-based frontend and application flow
-- letter upload and OCR for PDFs, Word, and images
-- multilingual interface selection
-- canton and migration profile selection
-- AI-assisted document summaries and recommendation hints
-- history tracking for user interactions
-- local CSV-backed storage and file handling
-
-### Planned scope
-
-The next phase is to build:
-- FastAPI backend and modern React/Vue frontend
-- PostgreSQL storage and secure object storage
-- ML-based document classification and field extraction
-- semantic RAG with embeddings for canton answers
-- secure document vault with encryption
-- deadline detection and reminder system
-- NGO dashboards, KPI reporting, and role-based access
-
-### Future vision
-
-Longer-term production goals:
-- predictive SEM and federal court outcome estimation
-- adaptive personalization and recommendation learning
-- document authenticity and fraud detection
-- multi-language legal terminology support
-- production ML monitoring and data pipelines
-- PWA with offline support and mobile-first UX
+- Users successfully navigate migration tasks without professional legal help
+- Documents are organized and retrievable
+- Deadlines are met and no critical dates are missed
+- NGO staff can manage multiple cases efficiently
+- Zero unauthorized access to sensitive migration data
 
 ---
 
-## Core product foundations
+## MVP scope & architecture
 
-This project is built around these prioritized user stories. Each story informs architecture, AI design, and roadmap choices.
+### Architecture layers
 
-### Foundation stories
-
-1. **API-first FastAPI backend** – build a decoupled, scalable backend for all services.
-2. **Secure authentication and RBAC** – protect migration data and support NGO roles.
-3. **Predictive SEM and court outcome estimation** – provide evidence-based decision support.
-4. **Automatic letter classification and field extraction** – automate document triage.
-5. **Deep learning OCR** – support scanned forms, handwriting, and complex layouts.
-6. **Secure migration document vault** – store documents with encryption and access control.
-7. **Mobile-first PWA interface** – serve users on phones and low-bandwidth networks.
-8. **Smart reminders and deadline detection** – reduce missed legal deadlines.
-9. **Semantic retrieval with embeddings** – ground answers in trusted canton documents.
-10. **Production-grade data pipeline** – support ingestion, embeddings, analytics, and ML monitoring.
-11. **NGO dashboards with KPIs** – support institutional workflows and reporting.
-12. **Multilingual and localized guidance** – make guidance accurate in multiple languages.
-13. **GDPR-ready audit logs and deletion workflows** – meet privacy regulations.
-14. **AI legal assistant** – generate official letters and appeals with confidence.
-15. **ML-based personalization** – adapt recommendations to user behavior.
-16. **Document authenticity validation** – reduce fraud and risk.
-
----
-
-## Architecture
-
-SwissMigrate AI is designed to move from prototype to production along a clear architecture path.
-
-### Architectural layers
-
-- **UI layer**: modern web client, mobile-first, PWA-ready.
-- **API layer**: FastAPI backend with clean service boundaries.
-- **Data layer**: PostgreSQL for structured data, secure object storage for files.
-- **AI layer**: model orchestration, embeddings, RAG, and ML services.
-- **Security layer**: auth, RBAC, encryption, audit, compliance.
-
-### Architecture goals
-
-- decouple frontend and backend
-- make AI workflow explicit
-- ensure secure document handling
-- support fast integration with partners
-- enable production observability
-
-### Why FastAPI
-
-FastAPI is chosen for its:
-- async performance for I/O-heavy workflows
-- automatic OpenAPI documentation
-- fast developer iteration
-- strong Python ecosystem compatibility with ML and data tools
-
-### Why PostgreSQL + object storage
-
-PostgreSQL solves:
-- transactional reliability
-- structured case metadata
-- queryable user and audit data
-
-Object storage solves:
-- secure file persistence
-- versioning and auditability
-- scalable document handling without database bloat
-
-### Why React/Vue + PWA
-
-Modern web frameworks provide:
-- responsive UI and mobile-first layout
-- component-based maintainability
-- PWA features for offline and app-like experiences
-
----
-
-## System flows
-
-### Document intake flow
-
-```mermaid
-flowchart TD
-  A[User uploads document] --> B[Language detection]
-  B --> C[OCR/Text extraction]
-  C --> D[PII masking]
-  D --> E[AI analysis & classification]
-  E --> F[RAG retrieval of canton sources]
-  F --> G[Response generation]
-  G --> H[Output translation & display]
-  H --> I[Secure storage & history]
+```
+┌─────────────────────────────────────┐
+│  Frontend (React + TailwindCSS)     │  Mobile-first PWA
+├─────────────────────────────────────┤
+│  FastAPI Backend (Uvicorn)          │  REST APIs + OpenAPI docs
+├─────────────────────────────────────┤
+│  Services & Business Logic           │  Auth, RAG, OCR, storage
+├─────────────────────────────────────┤
+│  Data & AI Infrastructure            │  SQLite, FAISS, SentenceTransformers
+├─────────────────────────────────────┤
+│  Local Storage & File System         │  Documents, embeddings, models
+└─────────────────────────────────────┘
 ```
 
-### User request flow
+### Technology stack (MVP)
 
-```mermaid
-flowchart TD
-  U[User request] --> API[FastAPI endpoint]
-  API --> Auth[Auth + RBAC]
-  API --> Service[Business logic]
-  Service --> DB[PostgreSQL]
-  Service --> AI[Model orchestration]
-  Service --> Storage[Object storage]
-  AI --> RAG[Semantic search]
-  RAG --> Sources[Document corpus]
-  Service --> Response[Return structured result]
+| Layer | Technology | Why |
+|-------|-----------|-----|
+| **Backend** | FastAPI + Uvicorn | Async performance, auto OpenAPI docs, Python ML ecosystem |
+| **Frontend** | React + TailwindCSS | Component-based, responsive, PWA-ready |
+| **Database** | SQLite | Zero-config local storage; upgrade to PostgreSQL later |
+| **Embeddings** | SentenceTransformers + FAISS | Free, local, deterministic |
+| **OCR** | PaddleOCR | Local, multilingual, no API calls |
+| **File storage** | Local filesystem | Encrypted, versioned, organized by user/case |
+| **DevOps** | Docker + docker-compose | Reproducible local stack |
+
+### API design
+
+All endpoints follow REST conventions and return structured JSON:
+
+```json
+{
+  "ok": true,
+  "data": { /* result */ }
+}
 ```
+
+Error responses:
+
+```json
+{
+  "ok": false,
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "JWT token invalid or expired"
+  }
+}
+```
+
+### File structure
+
+```
+project/
+├── app.py                    # FastAPI main entry point
+├── requirements.txt          # Python dependencies
+├── .env.example             # Secrets template
+├── docker-compose.yml       # Local stack definition
+├── services/                # Business logic
+│   ├── llm_service.py
+│   ├── ocr_service.py
+│   ├── rag_service.py
+│   ├── security_service.py
+│   └── storage_service.py
+├── modules/                 # Feature workflows
+│   ├── auth.py
+│   ├── cases.py
+│   ├── documents.py
+│   └── dashboard.py
+├── ui/                      # React frontend (later)
+├── data/                    # Static data and corpus
+│   ├── cantons/
+│   ├── embeddings/
+│   └── first_365_days/
+└── tests/                   # Unit and integration tests
+```
+
+---
+
+## Quick start
+
+### Prerequisites
+
+- Python 3.11+
+- Node 18+ (for frontend)
+- Docker & docker-compose (optional but recommended)
+
+### Local development (backend only)
+
+```bash
+# Create venv
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Copy and edit .env
+cp .env.example .env
+# Edit .env with your OpenAI key (if using) or leave blank for mock mode
+
+# Run FastAPI
+uvicorn app:app --reload --port 8000
+
+# View API docs
+# Open http://localhost:8000/docs (Swagger)
+#   or http://localhost:8000/redoc (ReDoc)
+```
+
+### Full local stack (with docker-compose)
+
+```bash
+docker-compose up --build
+```
+
+This starts:
+- FastAPI backend on `http://localhost:8000`
+- React frontend on `http://localhost:3000` (when added)
+- SQLite database (local file)
+- FAISS vector store (local directory)
+
+---
+
+## API & data
+
+### Core API routes
+
+```
+[Auth]
+  POST   /v1/auth/register          Create user account
+  POST   /v1/auth/login             Get JWT token
+  POST   /v1/auth/refresh           Refresh access token
+  GET    /v1/auth/me                Get current user profile
+
+[Cases & Documents]
+  POST   /v1/cases                  Create migration case
+  GET    /v1/cases/{id}             Get case details
+  POST   /v1/cases/{id}/documents   Upload document
+  GET    /v1/cases/{id}/documents   List case documents
+  DELETE /v1/cases/{id}             Delete case (with audit)
+
+[AI & Analysis]
+  POST   /v1/analyze/document       Analyze uploaded document
+  POST   /v1/search/semantic        Query canton knowledge base
+  GET    /v1/deadlines/upcoming     List upcoming deadlines
+
+[Admin]
+  GET    /v1/admin/audit            View audit logs
+  GET    /v1/admin/users            List users (admin only)
+  POST   /v1/admin/export           Export user data (GDPR)
+```
+
+### Database schema (SQLite)
+
+```sql
+-- Users & Auth
+CREATE TABLE users (
+  id TEXT PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  role TEXT DEFAULT 'user',  -- user, ngo_staff, admin
+  created_at DATETIME,
+  updated_at DATETIME
+);
+
+-- Migration Cases
+CREATE TABLE cases (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  title TEXT,
+  canton TEXT,
+  case_type TEXT,  -- asylum, work_permit, family_reunion, etc.
+  created_at DATETIME,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Documents & Uploads
+CREATE TABLE documents (
+  id TEXT PRIMARY KEY,
+  case_id TEXT NOT NULL,
+  filename TEXT,
+  file_path TEXT,
+  file_hash TEXT,
+  extracted_text TEXT,
+  extracted_entities JSON,  -- dates, deadlines, authorities
+  upload_at DATETIME,
+  FOREIGN KEY (case_id) REFERENCES cases(id)
+);
+
+-- Audit Logs
+CREATE TABLE audit_logs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT,
+  action TEXT,  -- login, upload, delete, access
+  target TEXT,  -- case_id, document_id, etc.
+  ip_address TEXT,
+  created_at DATETIME
+);
+
+-- Reminders & Deadlines
+CREATE TABLE reminders (
+  id TEXT PRIMARY KEY,
+  case_id TEXT NOT NULL,
+  deadline_date DATE,
+  description TEXT,
+  sent BOOLEAN DEFAULT 0,
+  FOREIGN KEY (case_id) REFERENCES cases(id)
+);
+```
+
+### Embeddings & vectors
+
+Embeddings are stored locally in `data/embeddings/`:
+
+```
+data/embeddings/
+├── canton_law.faiss          # Index of canton law documents
+├── first_365_days.faiss      # Index of first 365 days guidance
+├── faq.faiss                 # Index of FAQ content
+└── metadata.json             # Embedding metadata (source, date)
+```
+
+Each embedding is generated using `sentence-transformers/all-MiniLM-L6-v2` and cached for consistency.
 
 ---
 
 ## AI system
 
-SwissMigrate AI uses practical, explainable AI.
+### Components
 
-### AI components
+| Component | Purpose | Details |
+|-----------|---------|---------|
+| **OCR** | Extract text from scanned documents | PaddleOCR; supports handwriting and complex layouts |
+| **PII masking** | Remove sensitive data before analysis | Regex + NLP-based detection |
+| **Document classification** | Detect letter type and urgency | ML model (scikit-learn) with confidence scores |
+| **Field extraction** | Extract dates, authorities, case IDs | NER + structured extraction rules |
+| **Semantic retrieval** | Find relevant canton content | Embeddings + FAISS vector search |
+| **Response generation** | Generate answers with sources | LLM with in-context retrieval (RAG) |
+| **Outcome estimation** | Predict SEM/court decision | Scikit-learn models; experimental; requires legal disclaimer |
 
-| Component | Purpose | Status |
-|---|---|---|
-| OCR engine | Extract text from scanned letters and documents | Current prototype
-| PII masking | Remove sensitive data before AI analysis | Current prototype
-| Document classification | Detect letter type and urgency | Planned
-| Field extraction | Extract dates, authority, case number, deadline | Planned
-| Semantic retrieval | Find trusted canton content | Planned
-| Predictive estimation | Estimate SEM/court outcomes | Future
-| Personalization | Recommend next actions by user behavior | Future
-| Legal assistant | Draft letters and appeals | Planned
+### Design principles
 
-### AI design principles
+1. **Grounded in sources**: Every answer cites retrieved documents
+2. **Confidence-aware**: Surface uncertainty and disclaimer where needed
+3. **Explainable**: Show why a recommendation was made
+4. **Language-aware**: Detect and process text in source language
+5. **Privacy-first**: Mask PII before AI inference
 
-- **Grounded answers**: cite sources when using RAG.
-- **Explainable output**: show why a recommendation was made.
-- **Language-aware processing**: analyze text in the source language where possible.
-- **Privacy-first AI**: mask PII before model inference.
-- **Confidence-aware responses**: surface uncertainty when needed.
+### Mock mode (offline development)
 
-### Model strategy
-
-- detect language before analysis
-- choose specialized or multilingual models per input
-- use embeddings for semantic search instead of keyword matching
-- use supervised ML only with validated data
-- keep predictive models explainable and constrained
+Set `LLM_MOCK=true` in `.env` to use deterministic canned responses for testing and offline development without API calls.
 
 ---
 
-## OCR and document pipeline
+## Security & privacy
 
-### Current capability
+### Authentication & authorization
 
-- accepts uploads as text, PDF, Word, or image
-- runs OCR on non-text documents
-- applies basic PII redaction
-- stores extracted text and metadata
+- **JWT tokens**: Signed access + refresh tokens; 15-min expiry
+- **Password hashing**: bcrypt with salt rounds = 12
+- **Roles**: `user`, `ngo_staff`, `legal_assistant`, `admin`
+- **Protected endpoints**: All routes require valid JWT (except `/auth/login`, `/auth/register`)
 
-### Production pipeline
+### Encryption & storage
 
-1. user uploads document
-2. detect input language
-3. OCR / text extraction
-4. PII masking and redaction
-5. document classification
-6. field extraction (dates, deadlines, case IDs)
-7. semantic embedding generation
-8. secure storage of original and extracted data
+- **In transit**: TLS 1.2+ for all connections
+- **At rest**: Encrypt sensitive fields (case notes, PII) using `cryptography` library
+- **Keys**: Store encryption keys in `.env`, use environment variables, never commit secrets
 
-### Why this pipeline
+### Audit & compliance
 
-- separates text extraction from AI reasoning
-- makes privacy decisions auditable
-- improves search accuracy
-- prepares the system for ML training
+- **Audit logs**: All access to cases, documents, and deletions are logged
+- **Retention policy**: User data retained for 7 years (configurable via `.env`)
+- **Export & delete**: Users can export all their data or request deletion (GDPR Article 17)
+- **Consent tracking**: Record user consent for data processing
 
----
+### GDPR controls
 
-## RAG and semantic search
-
-### Why RAG
-
-Reactive AI answers are risky for legal and migration use cases.
-RAG ensures:
-- answers are grounded in canton documents
-- hallucinations are reduced
-- source provenance is visible
-
-### RAG flow
-
-1. create embeddings for user query and documents
-2. search vector store for relevant content
-3. retrieve top sources and score relevance
-4. pass sources to AI with user prompt
-5. generate answer with citations and confidence data
-
-### Expected benefits
-
-- better canton-specific accuracy
-- defensible answers
-- multilingual support for canton rules
-
----
-
-## Security and privacy
-
-### Key principles
-
-- treat migration cases as sensitive personal data
-- minimize exposure of PII
-- enforce role-based access
-- log all access and actions
-- comply with GDPR and Swiss privacy requirements
-
-### Controls
-
-- **Authentication**: JWT sessions or OAuth for partners
-- **Authorization**: RBAC for users, caseworkers, and NGOs
-- **Encryption**: TLS in transit, encryption at rest for sensitive fields
-- **Audit logging**: track document access, AI queries, and data changes
-- **Data retention**: define retention and deletion workflows
-
-### Document vault
-
-The document vault should provide:
-- encrypted storage for uploaded files
-- version history for documents
-- metadata tagging for deadlines and authorities
-- secure retrieval with access control
-
----
-
-## Contributor guide
-
-### First contributions
-
-- fix gaps in the current Streamlit prototype
-- implement API-first backend endpoints
-- replace CSV storage with PostgreSQL
-- add basic auth and RBAC
-- build document intake and metadata flows
-- add semantic search and embedding generation
-
-### Code structure
-
-Expected modules:
-- `app.py` / frontend entry point
-- `services/` for AI, OCR, storage, RAG, security logic
-- `modules/` for feature UI and business workflows
-- `utils/` for shared helpers, constants, translations
-- `data/` for canton content and reference material
-- `storage/` for persistence adapters
-
-### Contribution workflow
-
-1. fork the repo
-2. create a feature branch
-3. run local tests and formatting
-4. open a PR with clear scope
-5. document architecture changes in this wiki
-
-### Review expectations
-
-- changes should be incremental
-- backend logic must be testable
-- AI behavior must be grounded and explainable
-- security changes should include threat reasoning
-- update roadmap when adding new feature areas
-
----
-
-## Developer setup
-
-### Local requirements
-
-- Python 3.11+
-- `pip` or virtual environment
-- optional: Tesseract OCR for local testing
-
-### Install and run (prototype)
-
-```bash
-python -m venv .venv
-.\.venv\Scripts\activate
-pip install -r requirements.txt
-python app.py
+```
+GET /v1/users/me/export       # Download all user data as ZIP
+POST /v1/users/me/delete      # Request account deletion
+GET /v1/admin/audit           # View audit logs (admin only)
 ```
 
-### Recommended workflow
+---
 
-- run `app.py` for the prototype
-- inspect `services/` for backend logic
-- inspect `modules/` for feature flows
-- use `config.py` for environment settings
+## Deployment & infrastructure
 
-### Production migration steps
+### Local development
 
-1. build FastAPI backend with OpenAPI docs
-2. replace CSV storage with PostgreSQL
-3. add secure file storage integration
-4. move frontend to React/Vue
-5. add auth, RBAC, and logging
-6. implement semantic RAG and ML pipelines
+```bash
+# Run FastAPI directly (with auto-reload)
+uvicorn app:app --reload --port 8000
+
+# Run React dev server (in ui/ folder)
+npm run dev
+
+# Run tests
+pytest tests/
+
+# Format & lint
+black services/ modules/ utils/
+isort services/ modules/ utils/
+```
+
+### Production-ready setup (future)
+
+1. **Database**: Migrate to PostgreSQL with connection pooling
+2. **Storage**: Use S3-compatible object storage (MinIO or AWS S3)
+3. **Vector DB**: Upgrade to Pinecone, Weaviate, or Milvus
+4. **Frontend**: Build React with Vite; host on CDN
+5. **Scaling**: FastAPI + Gunicorn + load balancer; async workers for heavy tasks
+6. **Monitoring**: Prometheus + Grafana for metrics; ELK stack for logs
+
+### Docker deployment
+
+```dockerfile
+# Dockerfile (simplified)
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+```yaml
+# docker-compose.yml (local development)
+version: '3.9'
+services:
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - SQLALCHEMY_DATABASE_URL=sqlite:///./data/app.db
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+    volumes:
+      - ./data:/app/data
+  frontend:
+    build: ./ui
+    ports:
+      - "3000:3000"
+```
 
 ---
 
-## Roadmap and priorities
+## Development workflow
 
-### MVP target
+### Contributing
 
-- API-first backend foundation
-- document intake, OCR, and PII masking
-- letter helper and canton guidance
-- secure storage planning
-- basic multilingual interface
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feat/my-feature`
+3. Make changes following code style guidelines
+4. Run tests: `pytest tests/`
+5. Submit a PR with clear description and link to user story
 
-### Next milestone
+### Code quality
 
-- deep learning OCR and document classification
-- semantic retrieval and source grounding
-- deadline reminder workflow
-- secure vault and RBAC
-- NGO dashboard prototype
+- **Formatter**: Black (line length 88)
+- **Import sort**: isort
+- **Linter**: Pylint or flake8
+- **Tests**: pytest with > 80% coverage for `services/` and `modules/`
 
-### Production milestone
+### PR checklist
 
-- predictive SEM / court outcome support
-- ML personalization and recommender engine
-- document authenticity validation
-- GDPR audit and deletion workflows
-- PWA mobile experience
-
-### Roadmap principles
-
-- deliver in vertical slices: backend + feature + storage
-- keep AI grounded with sources and confidence scores
-- make every feature auditable and testable
-- avoid building advanced features before infrastructure exists
+- [ ] Tests pass: `pytest`
+- [ ] Code is formatted: `black` + `isort`
+- [ ] No secrets in code or commits
+- [ ] Documentation updated (wiki, docstrings, inline comments)
+- [ ] User story reference included in PR title
 
 ---
 
-## Technical decisions
+## Roadmap
 
-### Why not keep Streamlit
+### Phase 1 (MVP) — Weeks 1–8
 
-Streamlit is useful for prototypes, but not enough for production.
-Production requires:
-- decoupled frontend/backend
-- browser-first UX
-- authentication flows
-- mobile-responsive UI
+**Goal:** Core infrastructure + basic features
 
-### Why API-first
+- Story 1: API-first FastAPI backend
+- Story 2: Secure auth & RBAC
+- Story 5: Secure document vault
+- Story 4: AI document intelligence (OCR + extraction)
+- Basic UI placeholder
 
-API-first architecture lets us:
-- separate UI from business logic
-- support multiple clients (web, mobile, partner portals)
-- scale services independently
-- create clear contracts for developers
+### Phase 2 (Enhanced) — Weeks 9–16
 
-### Why semantic search
+**Goal:** Production-ready AI + user experience
 
-Keyword search is not enough for legal and canton content.
-Semantic search provides:
-- meaning-based retrieval
-- better cross-language results
-- stronger grounding for AI responses
+- Story 3: Semantic retrieval & knowledge engine
+- Story 6: Smart deadlines & reminders
+- Story 8: Mobile-first PWA
+- Story 9: GDPR audit infrastructure
+- Advanced UI & mobile responsiveness
 
-### Why production data pipelines
+### Phase 3 (Future) — Weeks 17+
 
-A production AI platform needs data observability.
-Pipelines ensure:
-- ingestion is reliable
-- embeddings are fresh
-- models use clean data
-- analytics and monitoring are available
+**Goal:** Predictive intelligence & enterprise features
+
+- Story 7: Outcome estimation (experimental)
+- Story 10: Production data pipeline
+- Advanced personalization & ML monitoring
+- Document authenticity validation
+- NGO dashboards & KPI reporting
+
+### Principles
+
+- Deliver in vertical slices (backend + feature + storage)
+- Keep AI grounded with sources
+- Make every feature testable and auditable
+- Avoid advanced features before infrastructure exists
+
+---
+
+## User stories (10 core features)
+
+*See separate document: `USER_STORIES_FORMATTED.md` for full details on each story.*
+
+Each story includes:
+1. Standard user story template
+2. Current situation & why improvement is needed
+3. Important considerations
+4. Definition of done
+5. Implementation notes
+
+**List of 10 core stories:**
+
+1. API-First Backend Architecture
+2. Secure Authentication & Role-Based Access Control
+3. Semantic Retrieval & AI Knowledge Engine
+4. AI-Powered Document Intelligence
+5. Secure Migration Case Vault
+6. Smart Deadline & Action Assistant
+7. SEM & Federal Court Outcome Estimation
+8. Mobile-First Progressive Web Application (PWA)
+9. GDPR-Ready Privacy & Audit Infrastructure
+10. Production AI & Data Pipeline
 
 ---
 
 ## Glossary
+
+| Term | Definition |
+|------|-----------|
+| **RAG** | Retrieval-Augmented Generation; uses retrieved documents to ground AI responses |
+| **RBAC** | Role-Based Access Control; restricts data access by user role |
+| **JWT** | JSON Web Token; stateless authentication credential |
+| **SEM** | Swiss State Secretariat for Migration |
+| **PII** | Personally Identifiable Information; sensitive data requiring protection |
+| **FAISS** | Facebook AI Similarity Search; local vector database |
+| **Vector DB** | Database storing dense embeddings for semantic search |
+| **Embeddings** | Numerical representations of text; used for semantic similarity |
+| **Canton** | Swiss administrative region (26 total) |
+| **PWA** | Progressive Web App; web app with app-like capabilities |
+| **GDPR** | General Data Protection Regulation (EU/Swiss privacy law) |
+| **OCR** | Optical Character Recognition; extract text from images/scans |
+| **NER** | Named Entity Recognition; identify persons, dates, authorities in text |
+| **Uvicorn** | ASGI server for running FastAPI |
+| **TLS** | Transport Layer Security; encrypted network communication |
+
+---
+
+**Last updated:** May 2026  
+**Maintained by:** SwissMigrate AI team  
+**License:** Open source (TBD)
 
 - **SEM** — State Secretariat for Migration
 - **RAG** — Retrieval-Augmented Generation
