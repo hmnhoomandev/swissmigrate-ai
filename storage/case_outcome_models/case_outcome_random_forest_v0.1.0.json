@@ -1,0 +1,71 @@
+{
+  "model_name": "case_outcome_random_forest",
+  "model_version": "v0.1.0",
+  "trained_on": "2026-06-01",
+  "training_data_hash": "b186be70afe28dc0",
+  "dataset_version": "synthetic-sem-v0.1",
+  "model_type": "GradientBoostingClassifier",
+  "features": [
+    "case_type",
+    "applicant_nationality",
+    "country_of_origin",
+    "origin_region",
+    "canton",
+    "age_range",
+    "family_status",
+    "main_language",
+    "legal_representation",
+    "ngo_support",
+    "lawyer_support",
+    "previous_refusal",
+    "has_interview",
+    "interpreter_provided",
+    "interview_issue_reported",
+    "family_ties_in_switzerland",
+    "vulnerability_flag",
+    "missed_deadline",
+    "appeal_filed",
+    "new_evidence_available",
+    "document_quality_score",
+    "evidence_completeness_score",
+    "translation_readiness_score",
+    "country_risk_index",
+    "case_complexity_score",
+    "processing_duration_days",
+    "similar_cases_count",
+    "historical_acceptance_rate",
+    "historical_appeal_success_rate"
+  ],
+  "metrics": {
+    "accuracy": 0.806,
+    "precision": 0.6,
+    "recall": 0.429,
+    "f1": 0.5,
+    "roc_auc": 0.735
+  },
+  "candidate_metrics": {
+    "LogisticRegression": {
+      "accuracy": 0.774,
+      "precision": 0.5,
+      "recall": 0.357,
+      "f1": 0.417,
+      "roc_auc": 0.652
+    },
+    "RandomForestClassifier": {
+      "accuracy": 0.806,
+      "precision": 1.0,
+      "recall": 0.143,
+      "f1": 0.25,
+      "roc_auc": 0.759
+    },
+    "GradientBoostingClassifier": {
+      "accuracy": 0.806,
+      "precision": 0.6,
+      "recall": 0.429,
+      "f1": 0.5,
+      "roc_auc": 0.735
+    }
+  },
+  "random_seed": 42,
+  "experimental": true
+}
