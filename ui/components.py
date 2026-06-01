@@ -5,7 +5,7 @@ from ui.flags import canton_flag_uri, flag_img
 from utils.translations import t
 
 
-PAGE_KEYS = ["dashboard", "letter_helper", "first_365", "canton_navigator", "history", "settings"]
+PAGE_KEYS = ["dashboard", "letter_helper", "first_365", "canton_navigator", "case_outcome", "history", "settings"]
 
 PAGE_ICONS = {
     "dashboard": "⌂",
@@ -15,6 +15,7 @@ PAGE_ICONS = {
     "history": "◴",
     "settings": "⚙",
 }
+PAGE_ICONS["case_outcome"] = "%"
 
 
 def page_label(page_key: str) -> str:

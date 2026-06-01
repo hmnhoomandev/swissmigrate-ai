@@ -1,6 +1,7 @@
 import streamlit as st
 
 from modules.canton_navigator import render_canton_navigator
+from modules.case_outcome_intelligence import render_case_outcome_intelligence
 from modules.first_365_guide import render_first_365_guide
 from modules.language_selection import render_language_gate
 from modules.letter_helper import render_letter_helper
@@ -59,8 +60,9 @@ if page == "dashboard":
         ("letter_helper", "✉", t("letter_helper"), t("letter_helper_desc"), t("open_letter_helper")),
         ("first_365", "365", t("first_365"), t("first_365_desc"), t("open_first_365")),
         ("canton_navigator", "⌖", t("canton_navigator"), t("navigator_desc"), t("open_canton_navigator")),
+        ("case_outcome", "%", t("case_outcome"), t("case_outcome_desc"), t("open_case_outcome")),
     ]
-    cols = st.columns(3)
+    cols = st.columns(4)
     for col, (page_key, icon, title, description, button_label) in zip(cols, services):
         with col:
             render_service_shell(icon, title, description)
@@ -86,6 +88,9 @@ elif page == "first_365":
 
 elif page == "canton_navigator":
     render_canton_navigator()
+
+elif page == "case_outcome":
+    render_case_outcome_intelligence()
 
 elif page == "history":
     render_page_hero(t("history"), t("history_intro"), t("history"), st.session_state["canton_code"])
