@@ -2,6 +2,8 @@ from io import BytesIO
 from pathlib import Path
 
 
+
+
 SUPPORTED_EXTENSIONS = (".pdf", ".png", ".jpg", ".jpeg", ".webp", ".docx")
 MAX_OCR_PDF_PAGES = 8
 

@@ -1,10 +1,22 @@
+#OCR + PDF
+pypdfium2>=0.1.0
+python-docx>=1.1.0
+
+#NLP EXTRACTION
+Spacy>=3.7
+dateparser>=1.0
+regex>=2024.6.3
+
+#APP 
+fastapi>=0.105
+uvicorn>=0.34
 streamlit>=1.33
 openai>=1.30
 python-dotenv>=1.0
 pandas>=2.2
+python-multipart>=0.0.5
 pdfplumber>=0.11
 Pillow>=10.0
 pytesseract>=0.3.10
-python-docx>=1.1
-spacy>=3.7
+pydantic>=2.10
 xx-ent-wiki-sm @ https://github.com/explosion/spacy-models/releases/download/xx_ent_wiki_sm-3.8.0/xx_ent_wiki_sm-3.8.0-py3-none-any.whl

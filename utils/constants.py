@@ -71,3 +71,16 @@ EMERGENCY_CONTACTS = {
     "poison": "145",
     "mental_health": "143",
 }
+
+DOCUMENT_TYPES = [
+    "decision",
+    "request",
+    "summons",
+    "notice",
+    "form",
+    "legal_letter",
+    "appeal_response",
+    "unknown"
+]
+
+LOW_CONFIDENCE_THRESHOLD = 0.70

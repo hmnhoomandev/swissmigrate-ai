@@ -306,3 +306,21 @@ def _steps_from_contexts(contexts: list[dict[str, Any]]) -> list[str]:
             if len(steps) >= 5:
                 return steps
     return steps
+
+def ask_llm_json(prompt: str, fallback: dict | None = None) -> dict:
+
+    fallback = fallback or {}
+
+    system = (
+        "Return only valid JSON. "
+        "Never hallucinate missing information. "
+        "If unsure, return empty values."
+    )
+
+    return _json_chat(
+        system=system,
+        user=prompt,
+        fallback=fallback,
+    )
+
+
