@@ -59,6 +59,8 @@ CATEGORICAL_FEATURES = [
 ]
 
 NUMERIC_FEATURES = [
+    "origin_acceptance_baseline",
+    "origin_protection_baseline",
     "document_quality_score",
     "evidence_completeness_score",
     "translation_readiness_score",
@@ -71,6 +73,130 @@ NUMERIC_FEATURES = [
 ]
 
 FEATURES = CATEGORICAL_FEATURES + NUMERIC_FEATURES
+REQUIRED_ANSWER_FIELDS = {
+    "nationality": "Nationality",
+    "country_of_origin": "Country of origin",
+}
+
+COUNTRY_PROFILES: dict[str, dict[str, Any]] = {
+    "Afghanistan": {"region": "South Asia", "risk": 9.0, "acceptance": 0.62, "protection": 0.82, "applications": 8627},
+    "Algeria": {"region": "North Africa", "risk": 3.0, "acceptance": 0.04, "protection": 0.08, "applications": 2110},
+    "Eritrea": {"region": "East Africa", "risk": 8.5, "acceptance": 0.58, "protection": 0.85, "applications": 2093},
+    "Syria": {"region": "Middle East", "risk": 9.0, "acceptance": 0.52, "protection": 0.86, "applications": 1438},
+    "Morocco": {"region": "North Africa", "risk": 2.8, "acceptance": 0.03, "protection": 0.06, "applications": 1289},
+    "Somalia": {"region": "East Africa", "risk": 8.0, "acceptance": 0.32, "protection": 0.68, "applications": 766},
+    "Tunisia": {"region": "North Africa", "risk": 2.8, "acceptance": 0.04, "protection": 0.07, "applications": 659},
+    "Iraq": {"region": "Middle East", "risk": 7.0, "acceptance": 0.22, "protection": 0.55, "applications": 559},
+    "Sri Lanka": {"region": "South Asia", "risk": 5.0, "acceptance": 0.20, "protection": 0.42, "applications": 455},
+    "Ethiopia": {"region": "East Africa", "risk": 6.8, "acceptance": 0.24, "protection": 0.50, "applications": 506},
+    "Georgia": {"region": "Eastern Europe", "risk": 2.5, "acceptance": 0.03, "protection": 0.08, "applications": 493},
+    "Iran": {"region": "Middle East", "risk": 6.5, "acceptance": 0.28, "protection": 0.52, "applications": 421},
+    "Guinea": {"region": "West Africa", "risk": 4.2, "acceptance": 0.08, "protection": 0.18, "applications": 353},
+    "Congo DR": {"region": "East Africa", "risk": 7.2, "acceptance": 0.22, "protection": 0.48, "applications": 323},
+    "Colombia": {"region": "Latin America", "risk": 5.5, "acceptance": 0.18, "protection": 0.34, "applications": 259},
+    "China": {"region": "East Asia", "risk": 4.5, "acceptance": 0.15, "protection": 0.28, "applications": 244},
+    "Russia": {"region": "Eastern Europe", "risk": 5.2, "acceptance": 0.14, "protection": 0.26, "applications": 219},
+    "Ivory Coast": {"region": "West Africa", "risk": 3.8, "acceptance": 0.07, "protection": 0.16, "applications": 217},
+    "Libya": {"region": "North Africa", "risk": 7.0, "acceptance": 0.10, "protection": 0.32, "applications": 207},
+    "Nigeria": {"region": "West Africa", "risk": 4.8, "acceptance": 0.05, "protection": 0.18, "applications": 205},
+    "Sudan": {"region": "East Africa", "risk": 8.8, "acceptance": 0.36, "protection": 0.70, "applications": 198},
+    "Cameroon": {"region": "West Africa", "risk": 5.2, "acceptance": 0.12, "protection": 0.30, "applications": 190},
+    "Burundi": {"region": "East Africa", "risk": 6.7, "acceptance": 0.42, "protection": 0.58, "applications": 180},
+    "Turkey": {"region": "Middle East", "risk": 4.5, "acceptance": 0.32, "protection": 0.42, "applications": 4107},
+    "Ukraine": {"region": "Eastern Europe", "risk": 8.2, "acceptance": 0.10, "protection": 0.78, "applications": 16616},
+    "Yemen": {"region": "Middle East", "risk": 9.2, "acceptance": 0.45, "protection": 0.82, "applications": 120},
+    "Venezuela": {"region": "Latin America", "risk": 6.2, "acceptance": 0.24, "protection": 0.44, "applications": 120},
+    "Pakistan": {"region": "South Asia", "risk": 5.2, "acceptance": 0.10, "protection": 0.22, "applications": 120},
+    "India": {"region": "South Asia", "risk": 3.0, "acceptance": 0.06, "protection": 0.12, "applications": 100},
+    "Brazil": {"region": "Latin America", "risk": 3.0, "acceptance": 0.05, "protection": 0.10, "applications": 80},
+}
+ORIGIN_COUNTRY_OPTIONS = sorted(COUNTRY_PROFILES)
+TRAINING_ORIGIN_REGIONS = sorted({profile["region"] for profile in COUNTRY_PROFILES.values()})
+COUNTRY_ALIASES = {
+    "china pr": "China",
+    "congo democratic republic": "Congo DR",
+    "democratic republic of congo": "Congo DR",
+    "drc": "Congo DR",
+    "ivory coast": "Ivory Coast",
+    "cote d ivoire": "Ivory Coast",
+    "syrian arab republic": "Syria",
+    "iran, islamic republic of": "Iran",
+    "turkiye": "Turkey",
+    "türkiye": "Turkey",
+}
+
+
+def validate_prediction_answers(answers: dict[str, Any]) -> list[str]:
+    missing: list[str] = []
+    for field, label in REQUIRED_ANSWER_FIELDS.items():
+        value = str(answers.get(field, "") or "").strip()
+        if not value or value.lower() == "unknown":
+            missing.append(label)
+    return missing
+
+
+def _normalize_origin_text(value: Any) -> str:
+    return " ".join(str(value or "").strip().casefold().replace("_", " ").replace("-", " ").split())
+
+
+def _title_origin(value: Any) -> str:
+    return " ".join(str(value or "").strip().replace("_", " ").replace("-", " ").split()).title()
+
+
+def canonical_country(value: Any) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return "Unknown"
+    normalized = _normalize_origin_text(text)
+    if normalized in COUNTRY_ALIASES:
+        return COUNTRY_ALIASES[normalized]
+    for country in ORIGIN_COUNTRY_OPTIONS:
+        if normalized == _normalize_origin_text(country):
+            return country
+    title = _title_origin(text)
+    return title if title in COUNTRY_PROFILES else text
+
+
+def infer_origin_region(*values: Any) -> str:
+    for value in values:
+        country = canonical_country(value)
+        if not country or country == "Unknown":
+            continue
+        if country in COUNTRY_PROFILES:
+            return str(COUNTRY_PROFILES[country]["region"])
+        normalized = _normalize_origin_text(value)
+        for region in TRAINING_ORIGIN_REGIONS:
+            if normalized == region.casefold():
+                return region
+    return "Unknown"
+
+
+def infer_country_risk_index(*values: Any) -> float:
+    for value in values:
+        country = canonical_country(value)
+        if country in COUNTRY_PROFILES:
+            return float(COUNTRY_PROFILES[country]["risk"])
+        region = infer_origin_region(value)
+        region_profiles = [profile for profile in COUNTRY_PROFILES.values() if profile["region"] == region]
+        if region_profiles:
+            return float(sum(profile["risk"] for profile in region_profiles) / len(region_profiles))
+    return 5.0
+
+
+def origin_baselines(country: Any, region: Any = None) -> tuple[float, float]:
+    canonical = canonical_country(country)
+    if canonical in COUNTRY_PROFILES:
+        profile = COUNTRY_PROFILES[canonical]
+        return float(profile["acceptance"]), float(profile["protection"])
+
+    inferred_region = str(region or infer_origin_region(country))
+    region_profiles = [profile for profile in COUNTRY_PROFILES.values() if profile["region"] == inferred_region]
+    if region_profiles:
+        return (
+            float(sum(profile["acceptance"] for profile in region_profiles) / len(region_profiles)),
+            float(sum(profile["protection"] for profile in region_profiles) / len(region_profiles)),
+        )
+    return 0.18, 0.32
 
 
 def _yes_no(value: Any) -> str:
@@ -167,9 +293,29 @@ def prepare_dataset(frame: pd.DataFrame) -> pd.DataFrame:
         if column in data:
             data[column] = pd.to_numeric(data[column], errors="coerce").fillna(0).astype(int)
 
-    data["origin_region"] = data.get("nationality_region", "Unknown")
-    data["applicant_nationality"] = data.get("nationality_region", "Unknown")
-    data["country_of_origin"] = data.get("nationality_region", "Unknown")
+    if "country_of_origin" not in data:
+        data["country_of_origin"] = data.get("nationality_region", "Unknown")
+    data["country_of_origin"] = data["country_of_origin"].apply(canonical_country)
+
+    if "applicant_nationality" not in data:
+        data["applicant_nationality"] = data["country_of_origin"]
+    data["applicant_nationality"] = data["applicant_nationality"].apply(canonical_country)
+
+    if "origin_region" not in data:
+        data["origin_region"] = data.apply(
+            lambda row: infer_origin_region(row.get("country_of_origin"), row.get("applicant_nationality"), row.get("nationality_region")),
+            axis=1,
+        )
+    else:
+        data["origin_region"] = data.apply(
+            lambda row: infer_origin_region(row.get("origin_region"), row.get("country_of_origin"), row.get("applicant_nationality")),
+            axis=1,
+        )
+
+    if "origin_acceptance_baseline" not in data:
+        data["origin_acceptance_baseline"] = data.apply(lambda row: origin_baselines(row.get("country_of_origin"), row.get("origin_region"))[0], axis=1)
+    if "origin_protection_baseline" not in data:
+        data["origin_protection_baseline"] = data.apply(lambda row: origin_baselines(row.get("country_of_origin"), row.get("origin_region"))[1], axis=1)
     data["age_range"] = data.get("applicant_age", "26-40").apply(_age_range)
     data["family_status"] = "Not specified"
     data["main_language"] = data.get("primary_language", "Other")
@@ -218,8 +364,8 @@ def train_and_save_models(dataset_path: Path = DATASET_PATH, model_version: str 
 
     candidates = {
         "LogisticRegression": LogisticRegression(max_iter=1200, random_state=RANDOM_SEED),
-        "RandomForestClassifier": RandomForestClassifier(n_estimators=180, min_samples_leaf=4, random_state=RANDOM_SEED),
-        "GradientBoostingClassifier": GradientBoostingClassifier(random_state=RANDOM_SEED),
+        "RandomForestClassifier": RandomForestClassifier(n_estimators=220, min_samples_leaf=8, max_depth=9, random_state=RANDOM_SEED),
+        "GradientBoostingClassifier": GradientBoostingClassifier(max_depth=2, min_samples_leaf=20, random_state=RANDOM_SEED),
     }
 
     metrics_by_model: dict[str, dict[str, float]] = {}
@@ -238,21 +384,25 @@ def train_and_save_models(dataset_path: Path = DATASET_PATH, model_version: str 
         }
         fitted_models[name] = pipeline
 
-    selected_name = max(metrics_by_model, key=lambda name: metrics_by_model[name]["f1"])
+    selected_name = max(metrics_by_model, key=lambda name: (metrics_by_model[name]["roc_auc"], metrics_by_model[name]["f1"]))
     selected_model = fitted_models[selected_name]
     joblib.dump(selected_model, MODEL_PATH)
     metadata = {
-        "model_name": "case_outcome_random_forest",
+        "model_name": "case_outcome_sklearn_outcome_estimator",
         "model_version": model_version,
         "trained_on": date.today().isoformat(),
         "training_data_hash": _hash_file(dataset_path),
-        "dataset_version": "synthetic-sem-v0.1",
+        "dataset_version": "synthetic-sem-country-v0.2",
         "model_type": selected_name,
         "features": FEATURES,
         "metrics": metrics_by_model[selected_name],
         "candidate_metrics": metrics_by_model,
         "random_seed": RANDOM_SEED,
         "experimental": True,
+        "synthetic_data_notes": (
+            "Country-level synthetic dataset calibrated from public SEM/AIDA asylum patterns; "
+            "not a substitute for official individual case data."
+        ),
     }
     METADATA_PATH.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
     return metadata
@@ -261,7 +411,10 @@ def train_and_save_models(dataset_path: Path = DATASET_PATH, model_version: str 
 def load_or_train_model() -> tuple[Pipeline, dict[str, Any]]:
     if not MODEL_PATH.exists() or not METADATA_PATH.exists():
         train_and_save_models()
-    return joblib.load(MODEL_PATH), json.loads(METADATA_PATH.read_text(encoding="utf-8"))
+    metadata = json.loads(METADATA_PATH.read_text(encoding="utf-8"))
+    if metadata.get("training_data_hash") != _hash_file(DATASET_PATH) or metadata.get("features") != FEATURES:
+        metadata = train_and_save_models()
+    return joblib.load(MODEL_PATH), metadata
 
 
 def answers_to_features(answers: dict[str, Any], dataset: pd.DataFrame | None = None) -> dict[str, Any]:
@@ -281,17 +434,47 @@ def answers_to_features(answers: dict[str, Any], dataset: pd.DataFrame | None = 
     frame = dataset if dataset is not None else load_dataset()
     case_type = answers.get("case_type", "Asylum")
     canton = answers.get("canton", "Zurich")
-    similar_pool = frame[(frame["case_type"] == case_type) & (frame["canton"] == canton)]
+    raw_nationality = canonical_country(answers.get("nationality", "Unknown"))
+    raw_country_of_origin = canonical_country(answers.get("country_of_origin", raw_nationality))
+    origin_region = infer_origin_region(raw_country_of_origin, raw_nationality, answers.get("origin_region"))
+    applicant_nationality = raw_nationality
+    country_of_origin = raw_country_of_origin
+    origin_acceptance, origin_protection = origin_baselines(country_of_origin, origin_region)
+
+    similar_pool = frame[
+        (frame["case_type"] == case_type)
+        & (frame["canton"] == canton)
+        & (frame["country_of_origin"] == country_of_origin)
+    ]
+    if similar_pool.empty:
+        similar_pool = frame[
+            (frame["case_type"] == case_type)
+            & (frame["canton"] == canton)
+            & (frame["origin_region"] == origin_region)
+        ]
+    if similar_pool.empty:
+        similar_pool = frame[(frame["case_type"] == case_type) & (frame["country_of_origin"] == country_of_origin)]
+    if similar_pool.empty:
+        similar_pool = frame[(frame["case_type"] == case_type) & (frame["origin_region"] == origin_region)]
+    if similar_pool.empty:
+        similar_pool = frame[(frame["case_type"] == case_type) & (frame["canton"] == canton)]
     if similar_pool.empty:
         similar_pool = frame[frame["case_type"] == case_type]
     historical_acceptance = float(similar_pool["outcome_accepted"].mean()) if not similar_pool.empty else float(frame["outcome_accepted"].mean())
     historical_appeal = float(similar_pool["appeal_success"].mean()) if not similar_pool.empty else float(frame["appeal_success"].mean())
+    entered_risk = answers.get("country_risk_index", None)
+    try:
+        country_risk_index = float(entered_risk)
+    except (TypeError, ValueError):
+        country_risk_index = 5.0
+    if entered_risk in (None, "") or country_risk_index == 5.0:
+        country_risk_index = infer_country_risk_index(raw_country_of_origin, raw_nationality, origin_region)
 
     return {
         "case_type": case_type,
-        "applicant_nationality": answers.get("nationality", "Unknown"),
-        "country_of_origin": answers.get("country_of_origin", answers.get("nationality", "Unknown")),
-        "origin_region": answers.get("origin_region", answers.get("country_of_origin", "Unknown")),
+        "applicant_nationality": applicant_nationality,
+        "country_of_origin": country_of_origin,
+        "origin_region": origin_region,
         "canton": canton,
         "age_range": answers.get("age_range", "26-40"),
         "family_status": answers.get("family_status", "Not specified"),
@@ -305,10 +488,12 @@ def answers_to_features(answers: dict[str, Any], dataset: pd.DataFrame | None = 
         "interview_issue_reported": _yes_no(answers.get("interview_issue_reported")),
         "family_ties_in_switzerland": _yes_no(answers.get("family_ties_in_switzerland")),
         "vulnerability_flag": "Yes" if answers.get("vulnerability_factors") else "No",
+        "origin_acceptance_baseline": origin_acceptance,
+        "origin_protection_baseline": origin_protection,
         "document_quality_score": document_score,
         "evidence_completeness_score": evidence_score,
         "translation_readiness_score": translation_score,
-        "country_risk_index": float(answers.get("country_risk_index", 5.0)),
+        "country_risk_index": country_risk_index,
         "case_complexity_score": float(answers.get("case_complexity_score", 5.0)),
         "processing_duration_days": float(answers.get("processing_duration_days") or frame["processing_duration_days"].median()),
         "missed_deadline": _yes_no(answers.get("missed_deadline")),
@@ -317,17 +502,33 @@ def answers_to_features(answers: dict[str, Any], dataset: pd.DataFrame | None = 
         "similar_cases_count": int(max(1, len(similar_pool))),
         "historical_acceptance_rate": historical_acceptance,
         "historical_appeal_success_rate": historical_appeal,
+        "raw_nationality": str(raw_nationality or ""),
+        "raw_country_of_origin": str(raw_country_of_origin or ""),
     }
 
 
 def similar_cases(features: dict[str, Any], data: pd.DataFrame, limit: int = 8) -> dict[str, Any]:
     scored = data.copy()
     score = pd.Series(0.0, index=scored.index)
-    for column, weight in [("case_type", 0.24), ("canton", 0.16), ("origin_region", 0.14), ("legal_representation", 0.1), ("has_interview", 0.08)]:
+    for column, weight in [
+        ("case_type", 0.22),
+        ("country_of_origin", 0.18),
+        ("origin_region", 0.1),
+        ("canton", 0.1),
+        ("legal_representation", 0.08),
+        ("has_interview", 0.06),
+    ]:
         score += (scored[column].astype(str) == str(features.get(column))).astype(float) * weight
-    for column, weight in [("document_quality_score", 0.1), ("evidence_completeness_score", 0.1), ("country_risk_index", 0.08)]:
+    for column, weight in [
+        ("origin_acceptance_baseline", 0.08),
+        ("document_quality_score", 0.08),
+        ("evidence_completeness_score", 0.08),
+        ("country_risk_index", 0.06),
+        ("case_complexity_score", 0.04),
+    ]:
         distance = (scored[column].astype(float) - float(features.get(column, 0))).abs()
-        score += (1 - (distance / 10).clip(0, 1)) * weight
+        divisor = 1 if column == "origin_acceptance_baseline" else 10
+        score += (1 - (distance / divisor).clip(0, 1)) * weight
     scored["similarity_score"] = score.clip(0, 1)
     top = scored.sort_values("similarity_score", ascending=False).head(limit)
     return {
@@ -339,7 +540,7 @@ def similar_cases(features: dict[str, Any], data: pd.DataFrame, limit: int = 8) 
         "average_processing_time": round(float(top["processing_duration_days"].mean()), 0),
         "common_approval_reasons": ["complete evidence", "legal or NGO support", "consistent interview record"],
         "common_rejection_reasons": ["missing documents", "weak supporting evidence", "missed deadline or unresolved interview issue"],
-        "rows": top[["case_id", "case_type", "canton", "origin_region", "outcome_accepted", "appeal_success", "similarity_score"]].to_dict("records"),
+        "rows": top[["case_id", "case_type", "canton", "country_of_origin", "origin_region", "outcome_accepted", "appeal_success", "similarity_score"]].to_dict("records"),
     }
 
 
@@ -443,12 +644,68 @@ def recommendations(features: dict[str, Any]) -> list[dict[str, str]]:
     return items
 
 
+def _structured_prior_probability(features: dict[str, Any]) -> float:
+    case_type = str(features["case_type"])
+    origin_acceptance = float(features["origin_acceptance_baseline"])
+    origin_protection = float(features["origin_protection_baseline"])
+    risk = float(features["country_risk_index"])
+    docs = float(features["document_quality_score"])
+    evidence = float(features["evidence_completeness_score"])
+    translations = float(features["translation_readiness_score"])
+    complexity = float(features["case_complexity_score"])
+
+    if case_type == "Asylum":
+        base = 0.02 + 0.92 * origin_acceptance
+        score = math.log(base / (1 - base)) + 0.08 * (risk - 5) + 0.08 * (evidence - 5) + 0.04 * (docs - 5)
+    elif case_type == "Temporary Protection":
+        base = 0.08 + 0.86 * origin_protection
+        score = math.log(base / (1 - base)) + 0.08 * (risk - 5) + 0.04 * (docs - 5)
+    elif case_type == "Family Reunification":
+        score = math.log(0.34 / 0.66) + 0.14 * (docs - 5) + 0.1 * (evidence - 5)
+        score += 0.65 if features["family_ties_in_switzerland"] == "Yes" else -0.35
+    elif case_type == "Work Permit":
+        score = math.log(0.32 / 0.68) + 0.2 * (docs - 5) + 0.1 * (translations - 5) - 0.03 * (risk - 5)
+    elif case_type == "Student Permit":
+        score = math.log(0.42 / 0.58) + 0.18 * (docs - 5) + 0.12 * (translations - 5)
+    elif case_type == "Residence Renewal":
+        score = math.log(0.55 / 0.45) + 0.14 * (docs - 5) + 0.1 * (evidence - 5)
+    elif case_type == "Citizenship":
+        score = math.log(0.38 / 0.62) + 0.17 * (docs - 5) + 0.1 * (translations - 5)
+    else:
+        score = math.log(0.28 / 0.72) + 0.1 * (docs - 5) + 0.08 * (evidence - 5)
+
+    if features["legal_representation"] == "Yes":
+        score += 0.28
+    if features["ngo_support"] == "Yes":
+        score += 0.18
+    if features["lawyer_support"] == "Yes":
+        score += 0.22
+    if features["previous_refusal"] == "Yes":
+        score -= 0.65
+    if features["missed_deadline"] == "Yes":
+        score -= 1.2
+    if features["interview_issue_reported"] == "Yes":
+        score -= 0.5
+    if features["vulnerability_flag"] == "Yes" and case_type in {"Asylum", "Temporary Protection", "Family Reunification"}:
+        score += 0.35
+    score -= 0.13 * (complexity - 5)
+    return min(0.97, max(0.02, 1 / (1 + math.exp(-score))))
+
+
 def predict_case_outcome(answers: dict[str, Any]) -> dict[str, Any]:
+    missing_required = validate_prediction_answers(answers)
+    if missing_required:
+        fields = ", ".join(missing_required)
+        raise ValueError(f"Missing required case outcome input: {fields}")
+
     data = load_dataset()
     model, metadata = load_or_train_model()
     features = answers_to_features(answers, data)
     frame = pd.DataFrame([features], columns=FEATURES)
-    probability = float(model.predict_proba(frame)[0, 1])
+    model_probability = float(model.predict_proba(frame)[0, 1])
+    prior_probability = _structured_prior_probability(features)
+    prior_weight = 0.75 if features["case_type"] in {"Asylum", "Temporary Protection"} else 0.5
+    probability = prior_weight * prior_probability + (1 - prior_weight) * model_probability
     similar = similar_cases(features, data)
     confidence, band = _confidence(probability, similar["count"])
     lower = max(0, math.floor(probability * 100 - band))
@@ -466,6 +723,8 @@ def predict_case_outcome(answers: dict[str, Any]) -> dict[str, Any]:
         "recommendations": recommendations(features),
         "appeal_worthiness_score": round(min(100, appeal_probability * 100 + (12 if features["new_evidence_available"] == "Yes" else 0))),
         "metadata": metadata,
+        "model_probability": round(model_probability * 100, 1),
+        "structured_prior_probability": round(prior_probability * 100, 1),
         "disclaimer": LEGAL_DISCLAIMER,
     }
 

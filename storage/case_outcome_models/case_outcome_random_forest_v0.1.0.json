@@ -1,9 +1,9 @@
 {
-  "model_name": "case_outcome_random_forest",
-  "model_version": "v0.1.0",
-  "trained_on": "2026-06-01",
-  "training_data_hash": "b186be70afe28dc0",
-  "dataset_version": "synthetic-sem-v0.1",
+  "model_name": "case_outcome_sklearn_outcome_estimator",
+  "model_version": "v0.2.0",
+  "trained_on": "2026-06-09",
+  "training_data_hash": "3c2bc7192d621676",
+  "dataset_version": "synthetic-sem-country-v0.2",
   "model_type": "GradientBoostingClassifier",
   "features": [
     "case_type",
@@ -26,6 +26,8 @@
     "missed_deadline",
     "appeal_filed",
     "new_evidence_available",
+    "origin_acceptance_baseline",
+    "origin_protection_baseline",
     "document_quality_score",
     "evidence_completeness_score",
     "translation_readiness_score",
@@ -37,35 +39,36 @@
     "historical_appeal_success_rate"
   ],
   "metrics": {
-    "accuracy": 0.806,
-    "precision": 0.6,
-    "recall": 0.429,
-    "f1": 0.5,
-    "roc_auc": 0.735
+    "accuracy": 0.813,
+    "precision": 0.73,
+    "recall": 0.877,
+    "f1": 0.797,
+    "roc_auc": 0.893
   },
   "candidate_metrics": {
     "LogisticRegression": {
-      "accuracy": 0.774,
-      "precision": 0.5,
-      "recall": 0.357,
-      "f1": 0.417,
-      "roc_auc": 0.652
+      "accuracy": 0.808,
+      "precision": 0.732,
+      "recall": 0.855,
+      "f1": 0.788,
+      "roc_auc": 0.891
     },
     "RandomForestClassifier": {
-      "accuracy": 0.806,
-      "precision": 1.0,
-      "recall": 0.143,
-      "f1": 0.25,
-      "roc_auc": 0.759
+      "accuracy": 0.799,
+      "precision": 0.713,
+      "recall": 0.869,
+      "f1": 0.783,
+      "roc_auc": 0.89
     },
     "GradientBoostingClassifier": {
-      "accuracy": 0.806,
-      "precision": 0.6,
-      "recall": 0.429,
-      "f1": 0.5,
-      "roc_auc": 0.735
+      "accuracy": 0.813,
+      "precision": 0.73,
+      "recall": 0.877,
+      "f1": 0.797,
+      "roc_auc": 0.893
     }
   },
   "random_seed": 42,
-  "experimental": true
+  "experimental": true,
+  "synthetic_data_notes": "Country-level synthetic dataset calibrated from public SEM/AIDA asylum patterns; not a substitute for official individual case data."
 }
